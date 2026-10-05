@@ -1,0 +1,84 @@
+{
+  "scope": "transcript structure and saved-case agreement only",
+  "source_sha256": "2174f445df534455c30e9ae7b54b8dfff4fdbdce3ff4eaf6b7d7e557fa3f8e4c",
+  "log_sha256": "52b5f6d681aa3c6cc8d4df167264efa733e5c6103230bdb64b3d82cf52edc311",
+  "summary_sha256": "945d5006c5eda1bbedcda28a6654fd8c3ce2d4038c2f7e66bfa78be520d405d1",
+  "cases": 363,
+  "families": {
+    "0": {
+      "cases": 225,
+      "labels": 240830308,
+      "max_layer": 882121,
+      "terminals": 21684
+    },
+    "1": {
+      "cases": 90,
+      "labels": 3175146,
+      "max_layer": 31088,
+      "terminals": 1848
+    },
+    "2": {
+      "cases": 36,
+      "labels": 62738391,
+      "max_layer": 1267519,
+      "terminals": 65679
+    },
+    "3": {
+      "cases": 12,
+      "labels": 179149,
+      "max_layer": 11323,
+      "terminals": 1305
+    }
+  },
+  "total_labels": 306922994,
+  "total_terminals": 90516,
+  "best_by_family": {
+    "0": 19,
+    "1": 19,
+    "2": 19,
+    "3": 19
+  },
+  "comparison_logs": {
+    "independent_run.txt": {
+      "sha256": "4fdce449c1b603bcd9154549b06fe96578b32a238d4e5ddb5b48da75b78c469e",
+      "case_records_equal": true
+    },
+    "supplied_run.txt": {
+      "sha256": "469dab49f81b3f563c6ccc4f35fda75520ec1d5cfb136fc39b2977adae0204c2",
+      "case_records_equal": true
+    }
+  },
+  "literal_table_key_counts": {
+    "0/3": 524,
+    "0/4": 40022,
+    "1/3": 524,
+    "1/4": 40208
+  },
+  "literal_tables_equal_saved_cpp_key_export": true,
+  "sector_sequence": {
+    "count": 363,
+    "cpp_sha256": "ae5942bfa77d4a416a843cce5d5478b3fcedff7be896e9dbcaa71b4b9fac334d",
+    "lean_sha256": "ae5942bfa77d4a416a843cce5d5478b3fcedff7be896e9dbcaa71b4b9fac334d",
+    "byte_equal": true
+  },
+  "first_layer_comparison": {
+    "cases": 363,
+    "lean_export_sha256": "5d8030a05e35d2bd8d32f75bd5bc7673783ce42fe53641db26fe2d399f6af6f1",
+    "all_sizes_equal_cpp_log": true
+  },
+  "first_layer_state_comparison": {
+    "states": 8610,
+    "all_363_state_sets_equal": true,
+    "cpp_sha256": "a17bb415969b1ab59c0cdcf15448b15058713d6d0e9aa5f5ece7337974b4e3f8",
+    "lean_sha256": "1108c8c6602a7a97a205e9d983405265137f03c93e3e25adbb31a583d80416a9",
+    "scope": "one transition only; later layers not compared"
+  },
+  "ubsan_case357": {
+    "transcript_sha256": "de78bd7fd2b689934f14f239864e286d6e57c52b6f55f71dd212f6f1e50639ac",
+    "case_record_equal_full_log": true,
+    "all_cases_sanitized": false
+  },
+  "log_cryptographically_attests_compiler_or_executed_source": false,
+  "cpp_refines_lean_proved_by_this_audit": false,
+  "finite_facts_lean_kernel_checked_by_this_audit": false
+}

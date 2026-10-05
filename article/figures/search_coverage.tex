@@ -1,0 +1,30 @@
+\begin{tikzpicture}[font=\sffamily]
+  \node[proof title] at (8,9.65) {From any short full word to a searched terminal label};
+  \node[proof box,text width=6.8cm,font=\sffamily\bfseries] (a) at (4.1,8.45)
+    {full word $w$, $|w|\le18$};
+  \node[proof box,text width=6.8cm,font=\sffamily\bfseries] (b) at (4.1,7.1)
+    {choose an orientation and one of the 363 sectors};
+  \node[proof box,text width=6.8cm,font=\sffamily\bfseries] (c) at (4.1,5.75)
+    {erase passive-target updates; retain the core control history $D$};
+  \node[proof box,text width=6.8cm,font=\sffamily\bfseries] (d) at (4.1,4.4)
+    {core history $\gamma$, \quad $K\le12+q$};
+  \node[proof green,text width=6.8cm,font=\sffamily\bfseries] (e) at (4.1,3.05)
+    {retained label $\lambda=(\mathcal R,D,C,T,I,\rho_c)$};
+  \node[proof green,text width=6.8cm,font=\sffamily\bfseries] (f) at (4.1,1.7)
+    {terminal core + exact completion\\$K+E(D)\le18$};
+  \draw[proof arrow] (a)--(b); \draw[proof arrow] (b)--(c);
+  \draw[proof arrow] (c)--(d); \draw[proof arrow] (d)--(e);
+  \draw[proof arrow] (e)--(f);
+  \node[font=\sffamily\bfseries,text=proofnavy] at (12.1,8.45) {Safe one-sided tests};
+  \node[proof green,text width=4.6cm] at (12.1,7.5) {repeat budget: $\rho_c\le\rho$};
+  \node[proof green,text width=4.6cm] at (12.1,6.45) {catalogue: $B_{\rm obs}\subseteq B_*$};
+  \node[proof green,text width=4.6cm] at (12.1,5.4) {clean-carrier lemmas\\when $p=2$};
+  \node[proof green,text width=4.6cm] at (12.1,4.35) {remaining-cost lower bound};
+  \node[proof green,text width=4.6cm] at (12.1,3.3) {merge only identical labels};
+  \draw[proof green arrow] (9.55,5.4) -- (7.65,5.4);
+  \node[proof orange,text width=4.6cm,minimum height=1.05cm] at (12.1,1.65)
+    {At termination: final core rows, and every chosen source has changed};
+  \draw[proof orange arrow] (9.55,1.65) -- (7.65,1.65);
+  \node[font=\sffamily\small\bfseries,text=proofnavy] at (8,.45)
+    {A genuine short realization cannot disappear before a terminal candidate is inspected.};
+\end{tikzpicture}

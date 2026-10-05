@@ -1,0 +1,86 @@
+{
+  "actual_inventory": {
+    "modules": [
+      "Audit",
+      "BasicGuards",
+      "Budget",
+      "CatalogueCapacity",
+      "CatalogueHistory",
+      "Catalogues",
+      "Certificate",
+      "CleanPersistence",
+      "ContributionCompletion",
+      "CoordinateRestriction",
+      "CoreGuardEncoding",
+      "CorePrefixConditions",
+      "CoreRowEncoding",
+      "CostPotential",
+      "CountHelpers",
+      "CounterBudget",
+      "ExactBudget",
+      "FreeXor",
+      "HGP13",
+      "IndexedEffectiveness",
+      "KnownControls",
+      "MandatoryCount",
+      "MissingEncoding",
+      "NonzeroRows",
+      "PackedRows",
+      "PackedTerminalPotential",
+      "Passive",
+      "PassiveCost",
+      "PassiveInsertion",
+      "ProjectedHistory",
+      "Projection",
+      "RemainingBound",
+      "RepeatErasure",
+      "ReturnTracking",
+      "Sector359Encoding",
+      "SectorCoordinates",
+      "SectorCost359",
+      "SectorCover",
+      "SectorGraph359",
+      "SectorIndexing",
+      "SectorPilot284",
+      "SectorTerminal359",
+      "SharedSearch",
+      "TightRepeats",
+      "TransitionChecks",
+      "TransposeBudget",
+      "TransposeCertificate",
+      "TransposeFree",
+      "TransposeTarget",
+      "Transposition",
+      "UntouchedEncoding",
+      "ZeroSector"
+    ],
+    "theorem_count": 8097
+  },
+  "negative_checks": [
+    {
+      "case": "unbuilt_module",
+      "rejected": true,
+      "reason": "Lake roots must include every accepted Lean module exactly once"
+    },
+    {
+      "case": "unimported_module",
+      "rejected": true,
+      "reason": "Audit imports must include every accepted proof module exactly once"
+    },
+    {
+      "case": "unaudited_theorem",
+      "rejected": true,
+      "reason": "Axiom requests must cover every accepted named theorem exactly once"
+    },
+    {
+      "case": "unsupported_theorem_layout",
+      "rejected": true,
+      "reason": "Unsupported theorem declaration layout in Proof"
+    },
+    {
+      "case": "attributed_hidden_theorem",
+      "rejected": true,
+      "reason": "Unsupported attributed declaration layout in Proof"
+    }
+  ]
+}

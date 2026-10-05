@@ -1,0 +1,18 @@
+{
+  "status": "PASS: fresh source/binary-bound full run agrees on all 363 cases",
+  "source_sha256": "2174f445df534455c30e9ae7b54b8dfff4fdbdce3ff4eaf6b7d7e557fa3f8e4c",
+  "binary_sha256": "2a80bbddffc1bfc70774405098164976effc8fbdde509522a2081bbd4ee4a1a1",
+  "run_sha256": "dc0f22c56a271a132edeb38dce4ff5a731915b2ca1dc54b3c14c41f7d913630c",
+  "preserved_run_sha256": "52b5f6d681aa3c6cc8d4df167264efa733e5c6103230bdb64b3d82cf52edc311",
+  "image_id": "sha256:9ab7f14196d7bc671cd825564fbe5da9410e2ab1b88b7ad1017bbe65df760684",
+  "compiler": "g++ (Ubuntu 11.4.0-1ubuntu1~22.04) 11.4.0",
+  "compile_command": "g++ -O3 -std=c++17 -pthread hgp13_verify.cpp -o evidence/full_provenance_2026-09-27/verifier.bin",
+  "start_utc": "2026-09-27T16:26:16Z",
+  "end_utc": "2026-09-27T16:35:00Z",
+  "exit_code": 0,
+  "cases": 363,
+  "total_labels": 306922994,
+  "terminals": 90516,
+  "all_best_gt_18": true,
+  "scope": "repeat execution of the same C++ implementation; not an independent solver or formal C++ refinement"
+}

@@ -1,0 +1,26 @@
+{
+  "status": "PASS: independent exhaustive catalogue keys equal pinned-source export",
+  "source_sha256": "45603e8dc02793580e1e03c1f68412b581b1d3d074799e37764588985a0cf2f2",
+  "independent_keys_sha256": "1ab90d4d09b35f4ec5c7cf30bff692718ba90e807039e05c1885b5da50ad25c3",
+  "pinned_export_sha256": "1ab90d4d09b35f4ec5c7cf30bff692718ba90e807039e05c1885b5da50ad25c3",
+  "counts_sha256": "dadf9958570af71a92b99d58d25acb6099f2edea2c642b3d0449ba9dad08e604",
+  "records": {
+    "orientation_0_capacity_3": {
+      "catalogues": 298,
+      "keys": 524
+    },
+    "orientation_0_capacity_4": {
+      "catalogues": 21687,
+      "keys": 40022
+    },
+    "orientation_1_capacity_3": {
+      "catalogues": 298,
+      "keys": 524
+    },
+    "orientation_1_capacity_4": {
+      "catalogues": 21823,
+      "keys": 40208
+    }
+  },
+  "scope": "external enumeration; Lean's literal trees are checked separately; no formal C++ semantics or binary provenance attestation"
+}

@@ -1,0 +1,24 @@
+\begin{tikzpicture}[font=\sffamily]
+  \node[proof title] at (8,10.4) {Roadmap of the lower-bound proof};
+  \node[proof orange,text width=6cm,minimum height=.9cm,font=\sffamily\bfseries] (hyp) at (8,9.25)
+    {Assume a legal circuit has $L\le18$};
+  \node[proof box,text width=7.8cm,minimum height=1.15cm] (proj) at (8,7.65)
+    {Projection: seven required forms plus at least three auxiliaries\\free XOR complexity $\alpha(F\mid P)=10$};
+  \node[proof green,text width=7.8cm,minimum height=1.15cm,font=\sffamily\bfseries] (bud) at (8,5.55)
+    {Forced copies and restorations\\$L\ge16+u$, \qquad $L\ge16+v$, \qquad hence $u,v\le2$};
+  \node[proof orange,text width=5.2cm,minimum height=1.45cm] (zero) at (3.4,3.55)
+    {$u=v=0$\\analytic counting gives $L\ge20$\\\textbf{contradiction}};
+  \node[proof box,text width=6.5cm,minimum height=1.45cm] (sectors) at (11.7,3.55)
+    {All other cases\\363 covering activity sectors\\necessary conditions only};
+  \node[proof green,text width=6.5cm,minimum height=1.05cm,font=\sffamily\bfseries] (finite) at (11.7,1.9)
+    {Finite exhaustive search: no terminal cost $\le18$};
+  \node[proof green,text width=11.5cm,minimum height=.95cm,font=\sffamily\bfseries] (end) at (8,.45)
+    {Therefore $L\ge19$; the explicit witness supplies $L\le19$};
+  \draw[proof arrow] (hyp) -- (proj);
+  \draw[proof arrow] (proj) -- (bud);
+  \draw[proof orange arrow] (bud) -- (zero);
+  \draw[proof arrow] (bud) -- (sectors);
+  \draw[proof arrow] (sectors) -- (finite);
+  \draw[proof green arrow] (zero) -- (end);
+  \draw[proof green arrow] (finite) -- (end);
+\end{tikzpicture}

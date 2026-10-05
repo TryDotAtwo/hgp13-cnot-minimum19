@@ -1,0 +1,20 @@
+{
+  "status": "stopped_performance_experiment_no_acceptance_claim",
+  "command": [
+    "lean",
+    "Kernel.lean"
+  ],
+  "metrics": {
+    "exit_code": 143,
+    "elapsed_seconds": 483,
+    "sampled_peak_rss_kib": 3741540
+  },
+  "observed_cpu_seconds_before_stop": 646,
+  "limitation": "Concurrent unrelated builds appeared during the run; wall time is not a controlled benchmark. Only this experiment was terminated. Canonical pilot is unchanged.",
+  "interpretation": "Direct +kernel mode did not provide a practical acceleration in this run. No limit or axiom policy was relaxed.",
+  "hashes": {
+    "pilot284\\experiments\\Kernel.lean": "8b6af2db62a07d98373e1aed4007e553953b11a6bbdefb1d5eb0cd80b892434c",
+    "pilot284\\experiments\\kernel.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "pilot284\\experiments\\kernel_metrics.txt": "706d96f732731bf0537e86412f2f06cc540dd15bef9131cd55e709d1b5486022"
+  }
+}

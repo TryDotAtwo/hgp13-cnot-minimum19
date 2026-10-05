@@ -1,0 +1,1149 @@
+\documentclass[11pt]{article}
+\usepackage[OT1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath,amssymb,amsthm,booktabs,geometry,listings,xcolor,graphicx,needspace,tikz,longtable}
+\usepackage[hidelinks]{hyperref}
+\usetikzlibrary{arrows.meta,calc,decorations.pathreplacing,fit,matrix,positioning,shapes.geometric}
+\geometry{margin=1in}
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{definition}[theorem]{Definition}
+\newcommand{\F}{\mathbb F_2}
+\newcommand{\wt}{\operatorname{wt}}
+\newcommand{\spanof}{\operatorname{span}}
+\newcommand{\cost}{\ell}
+\definecolor{proofnavy}{HTML}{18324B}
+\definecolor{proofblue}{HTML}{2468A2}
+\definecolor{proofpaleblue}{HTML}{EDF4FA}
+\definecolor{proofgreen}{HTML}{087A68}
+\definecolor{proofpalegreen}{HTML}{EDF8F4}
+\definecolor{prooforange}{HTML}{B45A08}
+\definecolor{proofpaleorange}{HTML}{FFF4E8}
+\definecolor{proofgray}{HTML}{667482}
+\definecolor{proofpalegray}{HTML}{F3F5F7}
+\definecolor{proofgrid}{HTML}{B8C4CF}
+\tikzset{
+  proof title/.style={font=\bfseries\large,text=proofnavy,align=center},
+  proof box/.style={draw=proofblue,fill=proofpaleblue,rounded corners=2pt,
+    line width=.8pt,align=center,inner sep=5pt,text=proofnavy},
+  proof green/.style={proof box,draw=proofgreen,fill=proofpalegreen},
+  proof orange/.style={proof box,draw=prooforange,fill=proofpaleorange},
+  proof gray/.style={proof box,draw=proofgray,fill=proofpalegray},
+  proof arrow/.style={-{Stealth[length=2.2mm]},line width=.8pt,draw=proofgray},
+  proof green arrow/.style={proof arrow,draw=proofgreen},
+  proof orange arrow/.style={proof arrow,draw=prooforange},
+  proof note/.style={font=\small,text=proofgray,align=center}
+}
+\setcounter{MaxMatrixCols}{13}
+\newcommand{\prooffigure}[3]{%
+  \begin{center}
+  \begin{minipage}{.98\linewidth}
+  \centering
+  \resizebox{\linewidth}{!}{\input{figures/#1.tex}}\par
+  \refstepcounter{figure}\label{#2}%
+  \small\textbf{Figure \thefigure.} #3
+  \end{minipage}
+  \end{center}}
+\lstset{basicstyle=\ttfamily\scriptsize,breaklines=true,columns=fullflexible,
+  keepspaces=true,showstringspaces=false,numbers=left,numberstyle=\tiny}
+\title{Proving the Exact Minimum CNOT Length\\of a $13\times13$ Binary Transformation}
+\author{Ivan Litvak\\Independent Researcher\\
+\texttt{vanya.litvak@gmail.com}}
+\date{27 September 2026}
+\begin{document}
+\maketitle
+\begin{abstract}
+We establish that the minimum CNOT length of the explicit binary matrix
+below is nineteen. Structural lower bounds from projected XOR complexity,
+forced copies and restorations, and clean-carrier invariants reduce the
+universal lower bound to 363 finite cases. Exact passive-target elimination
+then permits an exhaustive external C++ check; a nineteen-gate witness
+establishes attainability. Lean formalizes the general reduction and proves
+the minimum conditional on two precisely stated finite facts about the
+concrete lookup tables and search. We include the verifier, complete-run
+evidence, and Lean sources. The finite facts are supported by an audited
+external computation, not replayed by the Lean kernel.
+\end{abstract}
+
+\section{The matrix and the exact-minimum statement}
+Let $\F=\{0,1\}$ with addition modulo two. The input is an arbitrary vector
+$x=(x_0,\ldots,x_{12})^\top\in\F^{13}$; its thirteen coordinates are
+independent variables, not values restricted to a code space. We study the
+full labelled linear map $x\mapsto Mx$. With both rows and columns ordered
+$0,1,\ldots,12$, the matrix is explicitly
+\begin{equation}\label{eq:matrix}
+M=\begingroup\setlength{\arraycolsep}{4pt}\renewcommand{\arraystretch}{.85}
+\input{matrix.tex}\endgroup.
+\end{equation}
+
+\begin{definition}[Allowed programs and their length]\label{def:model}
+A current wire value $X_i$ is represented by its linear form in the thirteen
+inputs; initially $X_i=x_i$, so the matrix of current forms is $I_{13}$.
+A directed CNOT gate $(c,d)$, with control $c$, target $d$, and $c\ne d$,
+replaces $X_d$ by $X_d+X_c$ and leaves every other row unchanged. Thus every
+ordered pair of distinct labelled coordinates is allowed: there are exactly
+$13\cdot12=156$ gates, each of unit cost. A chronological list
+$g_1,\ldots,g_L$ applies these row updates successively to $I_{13}$; its cost
+is $L$. We use \emph{program} and \emph{word} interchangeably for such a
+chronological gate list.
+We define
+\[
+\cost(M)=\min\{L:\text{a legal length-$L$ program maps }I_{13}\text{ to }M\}.
+\]
+Equality with $M$ means equality of all thirteen output linear forms for all
+$x\in\F^{13}$. There are no prepared zero inputs, additional coordinates,
+Hadamard gates, measurements, or free input/output permutations. In
+particular, the coordinate order is fixed throughout. We minimize the cost
+of the full labelled operator, not its action on an encoding subspace.
+\end{definition}
+\prooffigure{cnot_semantics}{fig:cnot-semantics}{One allowed gate in all
+three equivalent descriptions. The physical statement
+$X_d\leftarrow X_d+X_c$ is the same as adding row $c$ to row $d$ over
+$\F$. Only the target changes, so a length-$L$ word performs exactly $L$
+row additions.}
+
+\begin{theorem}\label{thm:main}
+The matrix in \eqref{eq:matrix} has exact minimum length $\cost(M)=19$.
+Equivalently, every legal program implementing $M$ has at least nineteen
+gates, and a legal nineteen-gate program exists.
+\end{theorem}
+The proof is organized around the universal lower bound. The finite
+exclusion needed after the structural reduction is reproducible from the
+included source. Its rerun checks the same implementation, not a separately
+implemented solver. Section~\ref{sec:formal} states the precise current
+Lean-verification boundary.
+
+A row $r$ is encoded by $\sum_{j=0}^{12}r_j2^j$. This fixes every matrix
+entry and the bit order. For comparison with the machine-readable data,
+the same matrix has row masks
+\begin{equation}\label{eq:target}
+(M_0,\ldots,M_{12})=(1,2,4,8,16,32,329,402,292,515,1030,2075,4150).
+\end{equation}
+Write $S=\{0,1,2,3,4,5\}$, let coordinate 8 be the \emph{central}
+coordinate, and order the remaining coordinates as
+$Y=(6,7,9,10,11,12)$. Use input names $(a,b,c,d,e,f)$ on $S$, $t$ on
+coordinate 8, and $(y_0,\ldots,y_5)$ on $Y$. The operator is
+\begin{align*}
+(a',b',c',d',e',f')&=(a,b,c,d,e,f),& t'&=t+c+f,\\
+y'_0&=y_0+a+d+t,&y'_1&=y_1+b+e+t,\\
+y'_2&=y_2+a+b,&y'_3&=y_3+b+c,\\
+y'_4&=y_4+a+b+d+e,&y'_5&=y_5+b+c+e+f.
+\end{align*}
+The coordinates in $S$ will be called \emph{sources}: their final rows are
+unchanged basis rows. The coordinates in $Y$ will be called \emph{private
+outputs}; ``private'' refers only to the displayed incidence pattern---each
+row retains its own independent input $y_j$---and never means that $y_j$ is
+zero or initialized specially. Let
+\[
+J=S\cup\{8\},\qquad
+\pi:\F^{13}\longrightarrow\F^7
+\]
+be the coordinate projection that retains the coefficients on $J$, in the
+order $(0,1,2,3,4,5,8)$, and deletes the six coefficients on $Y$. Thus an
+initial private row has projection zero even though its physical input
+$y_j$ is arbitrary.
+\prooffigure{target_structure}{fig:target-structure}{Block structure of the
+target transformation. A dot marks a retained coefficient equal to one.
+Every private output also retains its own independent input $y_j$; the
+projection $\pi$ merely omits that coefficient in the auxiliary seven-bit
+problem. The picture restates the target equations and is not a circuit.}
+\prooffigure{projection_split}{fig:projection-split}{The two views of one
+physical row. Its full thirteen-bit value consists of seven retained
+coefficients and six private-input coefficients. The projection $\pi$ keeps
+the first block and forgets the second only for bookkeeping; it does not set
+any physical input to zero and does not modify the circuit.}
+
+For a program $\mathcal P$, define
+\[
+\begin{aligned}
+u(\mathcal P)&=|\{s\in S:\text{some gate of $\mathcal P$ targets $s$}\}|,\\
+v(\mathcal P)&=|\{y\in Y:\text{some gate of $\mathcal P$ uses $y$ as control}\}|.
+\end{aligned}
+\]
+These count distinct labelled coordinates, not gate occurrences. We write
+$u$ and $v$ when the program is understood.
+
+\subsection{Notation guide}
+The proof uses several representations of the same circuit. The following
+tables are a lookup guide; every local symbol is also defined again where it
+first enters an argument.
+\begin{center}\begin{tabular}{lp{.71\linewidth}}\toprule
+Symbol&Meaning\\\midrule
+$x$&arbitrary physical input vector in $\F^{13}$\\
+$X_i$&current linear form stored on labelled wire $i$\\
+$M$&the fixed target matrix in~\eqref{eq:matrix}\\
+$L$&length of the particular program currently under discussion\\
+$\cost(M)$&minimum legal CNOT length of the target matrix\\
+$S$&the six source coordinates $\{0,\ldots,5\}$\\
+$t$&the central input, physically located on coordinate 8\\
+$Y$&the six private-output coordinates $(6,7,9,10,11,12)$\\
+$J$&the seven retained coordinates $S\cup\{8\}$\\
+$\pi$&projection of a full row onto the coefficients indexed by $J$\\
+$u$&number of distinct sources ever used as targets\\
+$v$&number of distinct private outputs ever used as controls\\\bottomrule
+\end{tabular}\end{center}
+
+Later sections use $P$ for the seven initial projected basis forms,
+$f_0,\ldots,f_6$ for the seven required projected increments, $F$ for their
+ordered list, and $\alpha$ for free XOR complexity. The counting variables
+$h$ and $\rho$ denote, respectively, the number of additional projected
+forms and the number of unclassified repeated projected results. These names
+are chosen to avoid confusion with the physical source variables
+$(a,b,c,d,e,f)$.
+\prooffigure{representation_layers}{fig:representation-layers}{The four
+levels of description used in the proof. The physical word acts on thirteen
+full rows. Projection keeps seven coefficients. A sector selects a smaller
+core plus passive outputs. The finite search then stores only a sufficient
+label for each core prefix. Every arrow is justified later; none changes the
+physical synthesis problem.}
+
+\subsection{How the lower bound works}
+Figure~\ref{fig:map} separates the structural deductions from the remaining
+finite exclusion. The proof has five stages:
+\begin{enumerate}
+\item the explicit witness gives the upper bound $\cost(M)\le19$;
+\item projection by $\pi$, followed by forced-copy and restoration counts,
+gives the two budgets $L\ge16+u$ and $L\ge16+v$;
+\item these budgets and the separate $u=v=0$ argument place every
+hypothetical program of length at most eighteen in one of 363 sectors;
+\item catalogue, clean-carrier, passive-target, and remaining-cost tests
+define a finite search in each sector; and
+\item the C++ run finds no terminal state of total cost at most eighteen.
+\end{enumerate}
+Lean formalizes the general reduction and abstract search; the concrete
+finite exclusion remains an external computation, as detailed in
+Section~\ref{sec:formal}.
+\prooffigure{proof_map}{fig:map}{Logical structure of the lower bound.
+Every program of length at most eighteen must follow one of the displayed
+branches; the mathematical reductions plus the reported exhaustive search
+rule out every branch. The diagram is a roadmap, not a search certificate or
+a claim that every displayed implication has been checked in Lean. The
+nineteen-gate upper bound is separate.}
+
+\section{Related results and provenance}
+Patel, Markov, and Hayes prove the asymptotic worst-case CNOT count
+$\Theta(n^2/\log n)$~\cite{pmh}. This does not determine the cost of
+\eqref{eq:target} or an exact diameter at $n=13$.
+Bu, Fan, and Joo give a general lower bound and prove that an $n$-cycle
+permutation requires $3(n-1)$ CNOT gates~\cite{bfj}. In particular, a
+13-cycle requires 36 gates, so the present nineteen-gate matrix is not a
+diametral example. Their computable LMC estimate evaluates to 12 for our
+matrix and for its transpose, inverse, and inverse transpose; it does not
+directly establish the claimed value 19.
+
+Sodhani and Parhi report a nineteen-gate circuit for an HGP $[[13,1]]$
+encoder~\cite{sp}. Their benchmark table supplies an achieved count, not
+an exclusion of all eighteen-gate realizations. Our local reconstruction
+uses a length-three repetition-code parity-check matrix and fixed
+elimination conventions. It is not author-supplied benchmark data.
+Theorem~\ref{thm:main} concerns only \eqref{eq:target}; no stronger
+benchmark-identity or priority claim is made. Standard XOR-DAG and
+transposition arguments used below are not claimed as new general methods.
+
+\section{An explicit upper bound}
+Figure~\ref{fig:circuit} shows the witness in the original coordinate order.
+It establishes $\cost(M)\le19$; the later sections establish
+the central claim $\cost(M)\ge19$.
+The following chronological program realizes $M$:
+\begin{align*}
+&(0,9),(1,9),(1,10),(2,10),(2,12),(5,12),\\
+&(3,0),(0,11),(4,1),(1,11),(1,12),(1,7),(0,6),\\
+&(8,7),(8,6),(2,8),(5,8),(4,1),(3,0).
+\end{align*}
+The successive new target values are
+\begin{align*}
+&a+y_2,\ a+b+y_2,\ b+y_3,\ b+c+y_3,\ c+y_5,\ c+f+y_5,\\
+&a+d,\ a+d+y_4,\ b+e,\ a+b+d+e+y_4,\\
+&b+c+e+f+y_5,\ b+e+y_1,\ a+d+y_0,\\
+&b+e+t+y_1,\ a+d+t+y_0,\ c+t,\ c+f+t,\ b,\ a.
+\end{align*}
+These give precisely \eqref{eq:target}. Each gate is an involution, so the
+target is invertible as well.
+\prooffigure{cnot_circuit}{fig:circuit}{The chronological nineteen-gate
+witness. The two final gates restore the temporarily changed source rows.
+This diagram is generated from the same gate list as the Lean witness and
+checked against all thirteen rows of $M$. It proves only the upper bound
+$\cost(M)\le19$; it does not address optimality.}
+
+\section{Projected XOR complexity}
+Apply $\pi$ to each current row, discarding its six private-input
+coefficients only in this auxiliary argument. No physical input is removed
+or fixed: the original thirteen inputs remain arbitrary. The projected
+problem is deliberately easier than the physical one: it remembers every
+form once produced, permits unlimited reuse, and never overwrites a form.
+Therefore the first appearances in any physical CNOT program form a valid
+free XOR construction.
+The initial nonzero projected forms are
+$P=\{a,b,c,d,e,f,t\}$. The seven required new forms are
+\begin{align*}
+f_0=r_0&=a+d+t,&f_1=r_1&=b+e+t,&f_6=r_2&=c+f+t,\\
+f_2=q_0&=a+b,&f_3=q_1&=b+c,&f_4=s_0&=r_0+r_1,
+&f_5=s_1&=r_1+r_2.
+\end{align*}
+Thus $f_j$ is the required projected increment of private output $y_j$ for
+$0\le j<6$, while $f_6$ is the required final projected value of the central
+row. In the order $(f_0,\ldots,f_6)$ their bit masks are
+\begin{equation}\label{eq:F}F=(73,82,3,6,27,54,100).\end{equation}
+A free XOR program retains all previous forms and adds two available forms
+at unit cost. Write $\alpha(F\mid P)$ for its minimum cost.
+
+\begin{lemma}\label{lem:free} $\alpha(F\mid P)=10$.\end{lemma}
+\begin{proof}
+Let $H=\spanof(r_0,r_1,r_2)$. The coefficients of $d,e,f$ give
+$\dim H=3$, and its masks are
+$\{0,27,45,54,73,82,100,127\}$.
+In $\F^7/H$, the classes of $a,b,c,t$ are independent, with
+$d\equiv a+t$, $e\equiv b+t$, and $f\equiv c+t$.
+The nine elements of $(P\cup F)\setminus H$ therefore have distinct
+nonzero classes, and $P\cap H=\varnothing$.
+
+The intuition is that a new form outside $H$ can create at most one new
+independent difference inside its coset, whereas the targets inside $H$
+require three independent directions. We now make that count precise.
+
+Let $B_{\rm aux}$ be the distinct additional computed forms outside $H$ and
+outside $P\cup F$. Let $W\subseteq H$ be spanned by differences of pairs in
+$((P\cup F)\setminus H)\cup B_{\rm aux}$ belonging to the same coset.
+Every computed form inside $H$ belongs to $W$: induct on the program.
+Two parents inside $H$ stay in $W$; exactly one parent in $H$ cannot
+produce an element of $H$; two parents outside $H$ whose sum is in $H$
+give one of the defining differences. Thus $\dim W\ge3$.
+Initially there are no such differences. Adding one element to a coset
+increases the dimension of their span by at most one, because after
+choosing one representative all new differences are generated by one
+new difference and the old ones. Hence $|B_{\rm aux}|\ge3$.
+The seven distinct target forms and at least three additional forms
+require at least ten additions. Conversely, compute $a+d,b+e,c+f$,
+then their sums with $t$, the two $q$ forms, and the two adjacent pair
+sums of these three auxiliary forms. This uses ten additions.
+\end{proof}
+
+\prooffigure{quotient_argument}{fig:quotient}{The dimension obstruction
+in Lemma~\ref{lem:free}. Equalities such as $d=a+t$ are identities of cosets
+modulo $H$. The nine outside forms occupy distinct nonzero cosets;
+each additional outside form contributes at most one new direction to $W$.
+This proves the projected free-XOR lower bound, not by itself a lower bound
+for full thirteen-wire CNOT programs.}
+
+For a binary matrix $T$ whose columns represent independent input forms,
+write $\alpha(T)$ for its free XOR complexity from the basis inputs. The next
+lemma says that an XOR computation graph can be read backwards.
+\begin{lemma}\label{lem:transpose}
+For a binary $m\times n$ matrix $T$ without zero rows or columns,
+free XOR complexity satisfies $\alpha(T^\top)=\alpha(T)+m-n$.
+\end{lemma}
+\begin{proof}
+Here $n$ is the number of input forms and $m$ the number of requested output
+forms. Remove unused computation nodes from a circuit with $s$ additions,
+leaving $s'\le s$, and attach one pointer to each of the $m$ outputs. Every
+remaining input
+or computation node has at least one outgoing use. The total number of
+uses, including multiple edges and output pointers, is $2s'+m$.
+Reverse the edges. If a node $v$ had $d_v$ outgoing uses, it now has $d_v$
+incoming values and sums them using $d_v-1$ additions. The total is
+$\sum_v(d_v-1)=s'+m-n$. The parity of directed paths describes every
+input-output coefficient; reversing edges transposes these coefficients.
+This proves one inequality; applying it to $T^\top$ proves the reverse.
+\end{proof}
+The matrix with rows \eqref{eq:F} is square without zero rows or columns;
+its transpose has rows
+\begin{equation}\label{eq:FT}F^\top=(21,62,104,17,50,96,67).\end{equation}
+Its free complexity is also ten. Transposing a full CNOT program reverses
+its order and exchanges each control and target, preserving length.
+The normalized coordinate orders used below are
+$(0,1,2,3,4,5,8,6,7,9,10,11,12)$ and
+$(6,7,9,10,11,12,8,0,1,2,3,4,5)$ respectively.
+This is a length-preserving correspondence between two synthesis problems,
+not a free operation available inside the original gate model.
+\prooffigure{transpose_correspondence}{fig:transpose-correspondence}{How the
+transpose reduction acts on a full CNOT word. Reversing the word and swapping
+every control-target pair preserves its length and exchanges the activity
+statistics $u$ and $v$ after the stated relabeling. It does not authorize a
+free transpose or permutation within the original synthesis problem.}
+
+\section{A budget for repeated forms}
+Fix a full program and use the program statistics $u$ and $v$ defined above.
+Every gate is classified by the projected value of its new target row. A
+\emph{first appearance} creates a projected form not seen earlier. A
+\emph{repeat} produces a projected form already seen. We write $h$ for the
+number of additional first-appearing forms outside $P\cup F\cup\{0\}$, and
+$\rho$ for repeated results that are neither a forced first copy nor a
+credited source restoration.
+\begin{lemma}\label{lem:budget}
+Every length-$L$ realization satisfies $L\ge16+u$ and $L\ge16+v$.
+More precisely, in one orientation,
+\begin{equation}\label{eq:budget}
+L=13+h+u+\rho,\qquad h\ge3,\quad \rho\ge0.
+\end{equation}
+\end{lemma}
+\begin{proof}
+Retain all previously observed projected forms, including initial zero.
+First occurrences give a free XOR program with $7+h\ge10$ additions.
+Each of the six private outputs starts with zero projection and ends
+nonzero; its first nonzero update copies an already available projected
+control, and is a repeat. Each changed source must finally restore its
+original full row, producing another repeat. These $6+u$ events are
+distinct. The remaining $\rho$ repeated events give~\eqref{eq:budget}.
+Apply the same argument to the transposed word to obtain the bound in $v$.
+\end{proof}
+Thus $L\le18$ implies $u,v\le2$. If $u=2$, then
+$L=18,h=3,\rho=0$. If $u=1$, then $h+\rho\le4$. The two lower bounds are
+never added together.
+\prooffigure{operation_budget}{fig:budget}{The exact accounting identity
+and its zero-slack consequence. The six first copies are unavoidable
+because the private outputs start with zero projection. This does not set
+their independent physical inputs to zero. The figure explains the event
+count behind Lemma~\ref{lem:budget}; the original and transposed bounds are
+applied separately, not added.}
+
+\begin{lemma}\label{lem:zero} If $u=v=0$, then $L\ge20$.\end{lemma}
+\begin{proof}
+Only sources can update the central row, and only sources or the central
+row can update private outputs. Write the central row as $t+z$.
+The five target-row groups counted below are disjoint, so their compulsory
+costs may be added. Let $m_{be}$ count the coordinates in $\{b,e\}$ that are
+ever present in $z$, and let $m_{ad}$ count those in $\{a,d\}$. Set
+$m=m_{be}+m_{ad}$.
+Each visited coordinate in these sets must be toggled on and off;
+$c,f$ must each be toggled an odd number of times. Central updates cost
+at least $2+2m$.
+Outputs $y_0,y_1$ require at least two central transmissions in total
+and direct additions for the $4-m$ unvisited required coordinates,
+costing at least $6-m$. Outputs $y_2,y_3$ each cost at least two:
+without central transmissions they require two distinct sources, and
+with them their number of central transmissions is positive and even.
+Output $y_4$ costs at least $\min(4,6-m)$, by separating the absence
+of central transmissions from the case of at least two transmissions.
+Similarly $y_5$ costs at least $4-m_{be}$.
+These target groups are disjoint, so their costs sum to
+$16+m_{ad}+\min(4,6-m_{be}-m_{ad})$.
+For $m\le2$ this is $20+m_{ad}\ge20$; for $m\ge2$ it is
+$22-m_{be}\ge20$.
+\end{proof}
+\prooffigure{zero_sector_cost}{fig:zero-sector}{The additive cost count in
+Lemma~\ref{lem:zero}. The five boxes correspond to disjoint target-row
+groups, so their lower bounds add. The final split into $m\le2$ and $m\ge2$
+shows directly that the sector $u=v=0$ cannot contain a program of length at
+most eighteen.}
+
+\section{Covering sectors and auxiliary catalogues}
+In normalized coordinates let $A\subseteq\{0,\ldots,5\}$ be the
+sources that must actually change, and $R\subseteq\{0,\ldots,5\}$
+the private outputs allowed to control. Members of $R$ need not actually
+control. Put
+\[
+p=|A|,\qquad q=|R|.
+\]
+Thus $p$ is the number of selected changing sources and $q$ is the number of
+private outputs placed in the searchable core. Every source outside $A$
+stays fixed, and every output outside $R$ is passive. An \emph{orientation}
+means either the original problem or its length-preserving relabelled
+transpose.
+\begin{definition}[Activity sector]
+An activity sector is the data $(\text{orientation},A,R)$. It searches words
+in which exactly the sources in $A$ are required to change at least once and
+only private outputs in $R$ are permitted to act as controls. The set $R$ is
+an allowance: some of its members may never control.
+\end{definition}
+All possibilities remaining after Lemmas~\ref{lem:budget}
+and~\ref{lem:zero} are covered by the following families:
+\begin{center}\begin{tabular}{llllr}\toprule
+Actual case&Orientation&$|A|$&$|R|$&Sectors\\\midrule
+$u=2$, $v\le2$&original&2&2&225\\
+$v=2$, $u\le1$&transposed&2&1&90\\
+$u=v=1$&original&1&1&36\\
+$(u,v)=(1,0)$ or $(0,1)$&both&1&0&12\\\bottomrule
+\end{tabular}\end{center}
+Pad the set of actual controlling outputs to the displayed size as needed;
+this enlarges a sector. Sources in $A$ must actually change, which is
+checked at termination. The 363 sectors need not be disjoint.
+\prooffigure{sector_cover}{fig:sectors}{The activity-pair coverage.
+Padding the allowed set of controlling outputs enlarges a sector.
+Transposition is used to cover activity patterns with two such outputs;
+it is a length-preserving correspondence between problems. This proves only
+coverage by sector parameters; it does not prove completeness of the later
+normalized state search or the finite exclusion.}
+\prooffigure{sector_anatomy}{fig:sector-anatomy}{Anatomy of one sector.
+The searchable core contains the $p$ sources in $A$, the central row, and the
+$q$ private outputs in $R$. The other $6-p$ sources are fixed controls; the
+other $6-q$ outputs are passive targets and never control. The sector records
+permission to control, not a claim that every member of $R$ actually does.}
+
+\Needspace{13\baselineskip}
+\paragraph{Sector and catalogue notation.}
+\Needspace{12\baselineskip}
+\begin{center}\begin{tabular}{lp{.70\linewidth}}\toprule
+Symbol&Meaning\\\midrule
+$A$&selected source indices that must actually be targeted\\
+$R$&private-output indices permitted to act as controls\\
+$p,q$&cardinalities $p=|A|$ and $q=|R|$\\
+$\Omega$&all possible auxiliary projected forms outside $P\cup F\cup\{0\}$\\
+$B_0$&one candidate auxiliary set tested by catalogue closure\\
+$B_*$&the complete auxiliary set of a hypothetical short program\\
+$\mathcal C_k$&all closure-valid auxiliary sets of cardinality $k$\\\bottomrule
+\end{tabular}\end{center}
+
+For the target list $F$ in either orientation, set
+$\Omega=\F^7\setminus(P\cup F\cup\{0\})$, with $|\Omega|=113$.
+Here $\Omega$ is the universe of possible nonzero auxiliary projected forms.
+For $k=3,4$, enumerate every $k$-element subset $B_0\subseteq\Omega$.
+Starting from $P$, repeatedly add an element of $F\cup B_0$ when it is
+the sum of two available forms. Retain $B_0$ exactly when this closure
+reaches all of $F\cup B_0$; call the resulting catalogue $\mathcal C_k$.
+To see necessity for the short programs under consideration, take their
+complete auxiliary set $B_*$. The budget gives $|B_*|=h\in\{3,4\}$. Order
+$F\cup B_*$ by first appearance. At its first appearance,
+each form is the sum of two forms already present in
+$P\cup F\cup B_*$. The closure process can therefore reproduce this order
+and reaches every element, so $B_*\in\mathcal C_{|B_*|}$. Conversely, a
+closure sequence is itself a free XOR construction of all listed forms.
+Monotonicity makes the final closure independent of the order in which
+available additions are selected.
+Equivalently, if $x_i$ denotes the $i$th form in first-appearance order,
+there are earlier available parent forms $u_i$ and $v_i$ with
+$x_i=u_i+v_i$.
+The implementation examines all $\binom{113}{3}=234136$ triples and
+$\binom{113}{4}=6438740$ quadruples. It obtains
+\begin{center}\begin{tabular}{lrr}\toprule
+Orientation&$|\mathcal C_3|$&$|\mathcal C_4|$\\\midrule
+Original&298&21687\\Transposed&298&21823\\\bottomrule
+\end{tabular}\end{center}
+At a search prefix the observed auxiliary forms need only be contained
+in some feasible full set. Capacity four permits subsets of both triples
+and quadruples. These catalogues are regenerated from $F$ by the verifier;
+their displayed sizes are diagnostics, not externally trusted inputs.
+\prooffigure{catalogue_closure}{fig:catalogue-closure}{Why the catalogue test
+is necessary for a short program. The complete projected trace orders every
+required or auxiliary form by first appearance, proving that its full
+auxiliary set belongs to $\mathcal C_3$ or $\mathcal C_4$. A search prefix
+need only extend to such a set within its remaining capacity. The verifier
+still enumerates every candidate triple and quadruple; the picture is not a
+substitute for that enumeration.}
+
+\section{The zero-slack clean-carrier argument}
+This section applies only to $p=|A|=2$, where $h=3$ and $\rho=0$.
+Write a full row as $(\phi,\mu)$, where $\phi\in\F^7$ is its projected part
+and $\mu\in\F^6$ records its six private-input coefficients. Call the row
+\emph{clean} when $\mu=0$, and \emph{dirty} otherwise. Thus clean does not
+mean that $\phi$ is a basis form; it means only that no private coefficient
+contaminates the row.
+\begin{lemma}\label{lem:fresh}
+Before a private output $j$ first acquires nonzero projection, its row
+is its original private unit vector, and that private bit is absent
+from every other row.
+\end{lemma}
+\begin{proof}
+A zero-to-zero projected update would be an unbudgeted repeat, so this
+output has not yet been targeted. Its first use as control would export
+its fresh private bit while leaving the target projection unchanged.
+That is neither a first nonzero copy nor a full source restoration, and
+would again be an unbudgeted repeat.
+\end{proof}
+\begin{lemma}\label{lem:clean}
+After the first occurrence of $\phi\notin P\cup\{0\}$, another occurrence
+can only be a first nonzero copy to an uninitialized private output.
+It adds that output's fresh private bit. Consequently a dirty first
+occurrence cannot later produce a clean occurrence, and a clean occurrence
+cannot be recreated after it disappears.
+\end{lemma}
+\begin{proof}
+A source restoration gives a member of $P$, so the only admissible repeat
+of $\phi$ is a first nonzero copy. Let $e_j\in\F^6$ be the private unit
+vector belonging to output $j$. By Lemma~\ref{lem:fresh}, such a copy sends
+$(\phi,\mu)$ to $(\phi,\mu+e_j)$ with the fresh bit $e_j$ absent from $\mu$.
+Successive copies of this same projection cannot cancel those fresh bits.
+To reach the final private row $(\phi,e_j)$, either $\phi$ is first created
+at its final update on $j$, or a clean $\phi$ is copied into uninitialized
+$j$. In particular, a first occurrence carrying $e_j$ on a different
+row implies that $j$ was already initialized, forbidding the latter copy.
+\end{proof}
+
+The central target $f_6$ must therefore first occur on its own row in
+its final full form and must remain there. A controlling private output
+whose required projection has already occurred must either be final,
+or still have zero projection with a clean carrier currently present
+on a core row. For a passive output whose required projection has
+occurred in the core history, that history must contain its clean form.
+These are necessary conditions only.
+Fixed sources cannot carry a clean nonunit form. A passive output cannot
+carry a clean form at all: its own private bit cannot enter any controlling
+row and hence cannot be cancelled there. If a target projection were
+first created on a passive output, it could not subsequently return to
+the core without an unbudgeted repeat. Removing passive updates therefore
+does not invalidate the stated necessary conditions.
+\prooffigure{clean_carrier}{fig:clean}{The fresh-private-bit mechanism
+behind Lemmas~\ref{lem:fresh} and~\ref{lem:clean}. In the zero-slack case,
+the only allowed repeat of a nonbasis projection is a first copy into an
+uninitialized output, which adds a private bit that cannot cancel. These are
+necessary pruning conditions only, not a sufficient characterization of
+valid histories.}
+
+\section{Exact elimination of passive targets}
+Fix $p=|A|$ and $q=|R|$. A core history consists of updates to the $p$
+changed sources, the central row, and the $q$ potentially controlling
+outputs. Denote this gate sequence by $\gamma$ and its length by
+$K=|\gamma|$. Its rows retain
+$n_{\rm core}=7+q\le9$ bits, including the private bits
+of those $q$ outputs. Together with the $6-p$ fixed sources, these rows
+form an invertible $n_{\rm core}\times n_{\rm core}$ system at every step.
+Private bits of
+passive outputs cannot enter this system because those outputs never
+control; their omission is justified by the sector alphabet.
+
+Deleting passive-target gates is only a compression of the history; their
+cost is charged back exactly. Let $D(\gamma)$ be the set of every distinct
+retained row value that occurs on an allowable control during $\gamma$,
+including the initial basis. Embed each seven-bit $f_j$ into
+$\F^{n_{\rm core}}$ by appending zero private coefficients. Define
+\[
+\delta_D(f)=\min\{|B|:B\subseteq D,\ \bigoplus_{b\in B}b=f\},
+\qquad E(D)=\sum_{j\notin R}\delta_D(f_j).
+\]
+Here $\delta_D(f)$ is the smallest number of historical controls whose XOR
+is $f$, and $E(D)$ is the total minimum completion cost of all $6-q$ passive
+outputs.
+\Needspace{10\baselineskip}
+\begin{center}\begin{tabular}{lp{.70\linewidth}}\toprule
+Symbol&Meaning\\\midrule
+$\gamma$&the ordered sequence of core-target gates after passive gates are erased\\
+$K$&core length $|\gamma|$\\
+$n_{\rm core}$&retained row width $7+q$\\
+$D(\gamma)$&all distinct retained control values available during $\gamma$\\
+$\delta_D(f)$&minimum subset size in $D$ whose XOR is $f$\\
+$E(D)$&sum of these minimum costs over all passive outputs\\\bottomrule
+\end{tabular}\end{center}
+The initial basis ensures existence; repeated copies of one form cancel
+and can be removed.
+\begin{lemma}\label{lem:passive}
+For a core history $\gamma$ ending at all prescribed core target rows,
+the minimum cost of a full circuit extending that history is
+$|\gamma|+E(D(\gamma))$.
+\end{lemma}
+\begin{proof}
+Every update of a passive row adds a member of $D$, and its total added
+value must be exactly $f_j$, including cancellation of any private
+contamination. This proves the lower bound. Conversely, choose a minimum
+subset for each $j$ and insert each transmission at a time when its
+control value is available. Passive updates do not affect the core or
+one another, so all insertions coexist and give the required full operator.
+\end{proof}
+The endpoint hypothesis in this lemma is essential.
+\prooffigure{passive_elimination}{fig:passive}{A schematic passive-output
+history. Dashed transmissions may be erased without changing the full core
+rows, and inserted at the moments their control values exist. The displayed
+three-term XOR is illustrative; the minimization uses every subset of the
+actual historical control set $D$. The exact conclusion is conditional on a
+fixed core history with the prescribed endpoint; the picture does not show
+that all such core histories have been enumerated.}
+
+The verifier computes $\delta_D$ by exact zero-one subset dynamic
+programming. For a processed prefix of $D$, let $c(x)$ be the smallest
+subset size with XOR $x$. Start with $c(0)=0$ and $c(x)=\infty$ otherwise;
+for each $w\in D$ update
+\[
+c_{\rm new}(x)=\min(c_{\rm old}(x),1+c_{\rm old}(x+w)).
+\]
+Reading both old values in each pair $\{x,x+w\}$ prevents reuse of $w$.
+Induction over $D$ proves the recurrence. There are at most $2^9=512$
+values. Each of the $6-q$ passive outputs needs at least one operation,
+so a candidate of cost at most eighteen has core length
+\begin{equation}\label{eq:cap}K\le12+q.\end{equation}
+
+\section{A remaining-cost bound}
+At a search state, let $X$ be the current retained matrix and $Z$ its target.
+For each row index $i$ with $X_i\ne Z_i$, the vector $X_i+Z_i$ is the
+increment that must eventually be added to that row. Let $r$ be the number
+of differing rows, and let $b$ be the number of distinct required increments
+that occur as rows in neither endpoint matrix. These definitions are local
+to the following lemma.
+\begin{lemma}\label{lem:remaining}
+For invertible binary matrices $X,Z$, let $r$ count differing rows and
+let $b$ count distinct increments $X_i+Z_i$ for those rows that occur
+as rows in neither $X$ nor $Z$. Every CNOT path between them has length
+at least $r+\lceil b/2\rceil$.
+\end{lemma}
+\begin{proof}
+Write its length as $r+k$. At most $k$ required rows can be updated
+more than once. Removing their increments loses at most $k$ distinct
+values. Each remaining increment must be available on a control at
+the unique update of its target. Being absent from both endpoints,
+it must have been created as an intermediate value. Reserve the last
+update of each of the $r$ differing rows; these create only final rows.
+All nonendpoint intermediate values are created among the other $k$
+operations. Hence $b-k\le k$.
+\end{proof}
+Include fixed sources among the rows at both endpoints when applying
+this to a core. Let $z_A$ be the number of chosen sources that have never
+changed. Each such source still
+equals its target but must change and return. Thus another bound is
+$r+2z_A$. We use the maximum of the two valid bounds, not their sum:
+\[B_{\rm rem}=\max\{r+2z_A,r+\lceil b/2\rceil\}.\]
+The symbol $B_{\rm rem}$ therefore denotes a certified lower bound on the
+number of future core gates still required.
+\prooffigure{remaining_bound}{fig:remaining}{The counting argument for
+Lemma~\ref{lem:remaining}. Here $b$ counts distinct required increments
+absent from both endpoint row sets. The $k$ extra operations bound both
+the discarded increments and the newly created intermediate values. This is
+an admissible lower bound on the remaining cost, not a claim that the bound
+equals the exact CNOT distance.}
+
+\section{Finite search and completeness}
+The verifier does not enumerate all $13\times13$ matrices or all length-18
+gate words. For a fixed sector it enumerates only core histories, compresses
+each prefix to a label containing all information relevant to the future,
+and finally adds the exact passive completion cost.
+
+For each sector, order core rows as chosen sources, central row, and
+chosen controlling outputs. Choose fixed orderings
+$A=(s_0,\ldots,s_{p-1})$ and $R=(j_0,\ldots,j_{q-1})$. Let $e_i$ denote the
+$i$th standard basis vector of $\F^{n_{\rm core}}$. The initial core rows are
+$e_{s_i}$, $e_6$, and $e_{7+\ell}$; their target rows are
+$e_{s_i}$, $f_6$, and $e_{7+\ell}+f_{j_\ell}$, where
+$0\le i<p$ and $0\le\ell<q$. Each $f_j$ is padded with $q$ trailing zeros.
+Fixed controls are $e_s$ for $s\notin A$.
+The retained coordinates are the seven projected coordinates followed by
+the $q$ private bits belonging to $R$. Thus a full retained row is a
+$n_{\rm core}=7+q$ bit mask. At every time, the core rows together with the
+fixed source rows are the image of the initial $n_{\rm core}$ basis rows
+under invertible row
+operations; in particular they remain a basis and no genuine core update
+can create the zero full row.
+
+At each fixed core length store the complete label
+\[\lambda=(\mathcal R,D,C,T,I,\rho_c),\]
+where $\mathcal R$ is the tuple of current full core rows, $D$ the
+historical full control set including the initial basis, $C$ the mask
+of changed sources, $T$ the mask of credited full source restorations,
+$I$ the mask of first nonzero private-output initializations, and $\rho_c$
+the count of other projected repeats observed in the core.
+The masks $C$ and $T$ have one bit for each of the $p$ selected sources;
+$I$ has one bit for each of the $q$ selected private outputs.
+Here $D$ contains every distinct full row value that has appeared in the
+core history. Each such value was available as a control at the time it
+appeared, although only current rows, never merely historical members of
+$D$, may control a future core gate. The mathematical fields correspond
+directly to the implementation:
+\begin{center}\begin{tabular}{lp{.18\linewidth}p{.50\linewidth}}\toprule
+Field&C++ member&Information retained\\\midrule
+$\mathcal R$&\texttt{row}&current ordered core rows\\
+$D$&\texttt{appeared}&all distinct full row values seen so far\\
+$C$&\texttt{changed}&chosen sources targeted at least once\\
+$T$&\texttt{returned}&one credited full restoration per chosen source\\
+$I$&\texttt{copied}&one credited first nonzero initialization per core output\\
+$\rho_c$&\texttt{extra}&all other repeated projected results in the core\\\bottomrule
+\end{tabular}\end{center}
+The sector, its orientation, $A$, $R$, and the core length are fixed outside
+the label.
+\prooffigure{search_state_anatomy}{fig:search-state}{What one search label
+remembers. The current rows $\mathcal R$ determine legal next gates; the
+historical set $D$ determines passive completion; $C$, $T$, $I$, and $\rho_c$
+retain the finite budget information. Sector data $(A,R,p,q)$ and the layer
+number $K$ are fixed outside the label. Equal labels at the same layer have
+identical admissible futures.}
+
+Enumerate every distinct control-target pair with target in the core
+and control in the core or fixed sources. Reject a zero full new row.
+Credit the first full restoration of a chosen source, and the first
+nonzero projected initialization of a chosen private output. The choice
+of first rather than last restoration is harmless: if one source returns
+to its basis row $r_s$ times, exactly $r_s-1$ of those returns remain
+additional repeats whichever return receives the credit. If a projected
+result is in $P\cup\{0\}\cup\pi(D)$ and neither event is credited, increment
+$\rho_c$ and require $\rho_c\le2-p$.
+Here $\pi(D)=\{\pi(d):d\in D\}$ is the set of projections of historical
+control values.
+
+Let $B_{\rm obs}$ be the set of auxiliary projected forms observed in the
+current core prefix. Require $B_{\rm obs}$ to extend to a feasible
+catalogue set of size at most $5-p-\rho_c$. Update the rows and $D$; when
+$p=2$, apply the clean-carrier conditions. Finally require the current
+length plus $B_{\rm rem}$ not to exceed \eqref{eq:cap}.
+Historical values in $D$ are never used as current core controls.
+
+The direction of every rejection test is important. For a putative word of
+length at most eighteen, the exact budget with $|A|=p$ gives
+\begin{equation}\label{eq:shortbudget}
+h+\rho\le5-p,\qquad \rho\le2-p,
+\end{equation}
+because $h\ge3$. Erasing passive updates can hide earlier projected
+occurrences, so the core count $\rho_c$ is at most the global extra-repeat
+count $\rho$. The auxiliary forms seen in the core are likewise a subset of
+the global auxiliary set $B_*$. By the first-appearance argument above, $B_*$
+belongs to a feasible catalogue, and
+$|B_*|=h\le5-p-\rho\le5-p-\rho_c$. Hence both the repeat limit and the catalogue
+extension test are relaxations of \eqref{eq:shortbudget}, not additional
+restrictions on a true candidate. When $p=2$, Lemmas~\ref{lem:fresh}
+and~\ref{lem:clean} make the clean-carrier tests necessary. Finally,
+Lemma~\ref{lem:remaining} and the untouched-source bound are lower bounds on
+the actual remaining core suffix, so pruning when the current length plus
+$B_{\rm rem}$ exceeds \eqref{eq:cap} is also safe.
+
+At every layer, inspect labels with all core rows final and every
+chosen source marked changed. Such a label is a candidate exactly when
+$K+E(D)\le18$. Equal labels at an equal layer can be merged because all
+future transitions and tests depend only on the current rows, $D$, the four
+counters or masks, and the fixed sector data. The terminal cost depends only
+on $D$, the final rows, and the changed-source mask. Thus two equal labels at
+the same layer have identical admissible continuations and terminal cost.
+Hash collisions are resolved by complete label equality, so hashing does not
+identify unequal labels.
+\prooffigure{search_coverage}{fig:search-coverage}{The completeness pipeline
+formalized in Lemma~\ref{lem:coverage}. A hypothetical short full word is
+assigned to a sector, stripped to its core history, and followed through the
+retained-label search. Every rejection test is one-sided, and passive gates
+are charged back exactly by $E(D)$. Thus a true short realization would
+produce a terminal candidate inspected by the verifier.}
+
+\begin{lemma}\label{lem:coverage}
+Any realization of $M$ with at most eighteen gates yields a terminal
+candidate in at least one searched sector.
+\end{lemma}
+\begin{proof}
+Let $w$ be such a realization.
+
+\emph{Sector and orientation.}
+The two budget bounds give $u,v\le2$, while Lemma~\ref{lem:zero} excludes
+$u=v=0$. The activity-pair table therefore selects one of the 363 sectors,
+possibly after the length-preserving transpose correspondence. Its set $A$
+is exactly the sources targeted by the oriented word. Its set $R$ contains
+every private output used as a control; padding $R$ only moves additional
+outputs into the core and cannot invalidate the word.
+
+\emph{Erasure and representation.}
+Delete every gate whose target is outside the core. Such a passive coordinate
+never controls, so these deletions leave the entire sequence of core rows
+unchanged. Sources outside $A$ are never targeted and remain fixed controls.
+Consequently every surviving gate has a core target and a control that is
+either a current core row or a fixed source, exactly the alphabet enumerated
+by the search. Passive private bits never enter a core row, so restricting
+the surviving rows to the $n_{\rm core}=7+q$ retained coordinates loses no information
+about this core history. If its length is $K$, the deleted part contains at
+least one update for each of the $6-q$ passive outputs; hence
+$K\le18-(6-q)=12+q$, as in \eqref{eq:cap}.
+
+\emph{Induction over the core history.}
+The initial search label is precisely the initial retained basis, with that
+basis recorded in $D$ and all masks and counters zero. Suppose the label of a
+genuine prefix survives at its layer. The next genuine gate is among the
+enumerated control-target pairs. Its new full row is nonzero by invertibility.
+Updating $\mathcal R$ and adjoining the new value to $D$ reproduces the next
+genuine prefix. The definitions of $C,T,I$, and $\rho_c$ reproduce the credited
+change, restoration, initialization, and repeat events; crediting the first
+rather than the final restoration only changes which one of several returns
+is exempted, not their total number. The repeat and catalogue tests are safe
+by \eqref{eq:shortbudget} and the catalogue first-appearance argument. In the
+zero-slack case the clean-carrier tests are necessary by
+Lemmas~\ref{lem:fresh} and~\ref{lem:clean}. The remaining-cost test is no
+larger than the genuine suffix. Thus the successor is retained, unless it is
+merged with an equal label; label sufficiency then preserves the same
+continuation. Induction reaches the complete erased core history.
+
+\emph{Terminal cost.}
+The final core rows are their prescribed full targets, and every member of
+$A$ has been targeted, so the resulting label passes the terminal test. For
+each passive output, the controls used by the deleted gates occur in $D$ and
+their XOR is its required increment. Cancelling duplicate controls gives a
+subset of $D$ no larger than the deleted list. Therefore
+$E(D)$ is at most the number of deleted gates; by Lemma~\ref{lem:passive},
+it is also the exact minimum passive completion cost. Hence
+$K+E(D)\le |w|\le18$, and the label is a
+terminal candidate.
+\end{proof}
+
+\paragraph{Finite exclusion.}
+A fresh full run of the supplied implementation completes all sectors:
+\begin{center}\begin{tabular}{lrrr}\toprule
+Family&Sectors&Layer labels&Terminal labels\\\midrule
+Two sources, two outputs&225&240830308&21684\\
+Transposed: two sources, one output&90&3175146&1848\\
+One source, one output&36&62738391&65679\\
+One source, no controlling outputs&12&179149&1305\\\midrule
+Total&363&306922994&90516\\\bottomrule
+\end{tabular}\end{center}
+No terminal label has total cost at most eighteen. These are sums of
+layer sizes, not counts of distinct matrices or circuits. A sentinel
+cost of 999 means no terminal was found, not a length-999 witness.
+The successful exit is zero with the final marker
+\texttt{VERIFIED\_FIXED\_MATRIX\_MINIMUM\_19}.
+The implementation imposes no heuristic truncation of the searched layers.
+An interrupted or failed run does not establish the exclusion.
+Together with Lemma~\ref{lem:coverage}, this exhaustive result supplies the
+lower bound. Its evidentiary form is source code plus a reported rerun, not an
+independently checkable proof certificate.
+
+\begin{proof}[Completion of Theorem~\ref{thm:main}]
+A circuit of cost at most eighteen would contradict finite exclusion
+by Lemma~\ref{lem:coverage}. The explicit nineteen-gate circuit supplies
+the opposite inequality.
+\end{proof}
+
+\section{Reproducibility and formalization boundary}\label{sec:formal}
+The proof separates a general mathematical reduction, its concrete C++
+implementation, and the finite execution. Lean checks the general reduction
+and derives the exact minimum from the explicit finite premise below.
+The concrete tables and exclusion are supported by the external audits and
+run evidence supplied under \texttt{anc/}; they are not replayed by Lean.
+\prooffigure{verification_boundary}{fig:verification-boundary}{The updated
+verification boundary. Lean checks the general reduction and the conditional
+minimum theorem. Concrete catalogue completeness and finite exclusion are
+supported externally; the C++ implementation is audited rather than
+formally verified. No unconditional kernel proof is claimed.}
+
+\subsection*{Finite C++ exclusion and implementation audit}
+The source file \texttt{hgp13\_verify.cpp} regenerates all catalogues and
+sectors and requires no data files or third-party C++ libraries.
+Compile and run with
+\begin{lstlisting}[numbers=none]
+g++ -O3 -std=c++17 -pthread hgp13_verify.cpp -o hgp13_verify
+./hgp13_verify 3
+\end{lstlisting}
+The rerun used GCC 11.4.0 in a Linux container with networking disabled.
+Its source SHA-256 is
+\begin{center}\scriptsize\ttfamily
+2174f445df534455c30e9ae7b54b8dfff4fdbdce3ff4eaf6b7d7e557fa3f8e4c.
+\end{center}
+The accompanying evidence contains the full run log and source identity.
+An additional full run compiled that exact source with the same GCC flags
+in the pinned network-disabled container. The wrapper recorded the source
+and binary SHA-256 values, command, exit code zero, and new transcript hash.
+All 363 case records and family totals match the preserved run; the
+manifest and audit are in
+\texttt{anc/evidence/full\_provenance\_2026-09-27/}. This repeats the same
+implementation rather than independently proving its semantics.
+The reproducible script \path{anc/scripts/audit_full_run.py} checks all 363
+case records, layer and family sums, two comparison transcripts, and equality
+of the saved exported catalogue key sets with the literal Lean lookup trees.
+An independent exhaustive enumerator, which does not include the verifier
+source and adds all currently derivable forms in simultaneous rounds,
+reproduces the same four key sets and catalogue counts. This is an
+external cross-check of the concrete tables, not a kernel proof of their
+completeness or of the C++ generator semantics.
+Separate executable exports from C++ and Lean agree byte for byte on the
+orientation, source and relay tuple of each of the 363 sectors.
+Running the abstract Lean transition once for every sector yields 363
+first-layer sizes that all agree with the saved C++ layer counts. A
+source-hash-pinned instrumented C++ diagnostic and a separate Lean export
+also agree on all 8,610 complete first-layer state records, including rows,
+history bits, and counters. For sectors 234 and 359, source-hash-pinned
+diagnostics exported every layer: respectively 6,668 and 2,208 complete
+state records agree as sets with the candidate graphs whose transitions
+are checked in Lean. These comparisons cover two sectors and do not
+establish later-layer correspondence for the other 361 sectors.
+The supplementary source audit records bounds for the packed arrays and
+catalogue keys, the layer and 0/1-cost loop invariants, and the worker
+join conditions. A separate UBSan diagnostic on sector 357 matched its
+preserved full-run record; it does not certify the other sectors.
+The pinned terminal-cost routine also agrees with a separate shortest-path
+BFS oracle on 1,518 deterministic 7--9-bit histories and all 453,376
+resulting cost entries; this bounded comparison is not a formal proof of
+the C++ loop.
+This agreement is repeatability evidence for the same implementation. The
+log itself does not cryptographically attest which binary produced it, and
+the search result is not a Lean kernel certificate.
+
+\subsection*{Lean theorem and its finite premise}
+The Lean development pins version 4.34.0 and uses its bundled standard
+library. It specifies bit-vector rows, legal gates, full matrix execution,
+the nineteen-gate witness, and the exact-minimum proposition. It also
+develops the preservation of full core rows under erasure of passive-target
+gates and exact row-update accounting. The kernel-checked development now
+also proves free XOR complexity ten in both orientations, the necessity
+of three distinct auxiliary projected values, full-word transposition,
+and the unconditional bounds $L\geq16+u$ and $L\geq16+v$.
+The exact budget $L=13+h+u+\rho$ and its short-word consequences are checked
+in both orientations. For the concrete transpose free-XOR lemma, an
+inductive first-appearance argument reduces the certificate to 198
+ordered pairs of auxiliary values; the kernel checks both their
+closed-set witnesses and coverage of all seven-bit pairs. This small
+certificate does not certify the main CNOT exclusion. The general
+rectangular free-XOR transposition principle is not yet formalized;
+its concrete consequence here is proved independently.
+The kernel also proves $L\geq20$ when $u=v=0$, by counting actual gates
+and tracking coefficient parities. It verifies that the 363 sector parameter
+records are distinct and cover every putative legal word of length at most
+eighteen, preserving the chosen orientation's full operator and length.
+The abstract auxiliary-catalogue lemma is checked: saturation is equivalent
+to a valid first-appearance program, and every full realization supplies an
+accepted auxiliary set in either orientation. The size bounds and abstract
+subset test for partial histories are also checked. The concrete table
+enumeration and its reported cardinalities remain outside this certificate.
+At the saturated two-source budget, the kernel proves uniqueness of the
+mandatory repeats and the fresh-private-bit invariant at every prefix.
+It also proves that a clean nonbasis value must be globally new, and that
+a repeated final nonbasis row is copied from its exact clean goal into an
+intact private output. All three semantic core-history conditions are now
+proved in both orientations: the seen central goal is already final; an
+unfinished kept output has an intact row and a current exact clean carrier;
+and a seen passive goal has its exact clean form in core history. Erasure
+of passive-target gates preserves and reflects this full-row history.
+The exact passive-cost theorem is also proved: the 0/1 recurrence computes
+the minimum over distinct historical forms, all passive minima can be
+attained simultaneously by legal insertions, and no completion with the
+same core is shorter. Existence of the required representations follows
+from the seven retained initial basis rows in both orientations.
+For rows supported on a sector's retained coordinates,
+\texttt{PackedCostRefinement.cost\_pack\_eq} proves that this exact
+recurrence has the same value on full thirteen-bit rows and their packed
+integer masks. The correspondence of the imperative C++ array update to
+that recurrence is reviewed separately, not verified by Lean.
+The theorem \texttt{SectorPackedCost.actual\_core\_cost\_pack\_eq}
+instantiates this equality for the complete retained history of every
+compatible full program and each of its passive target differences.
+It also checks that those differences have no discarded-coordinate bits.
+The stronger \texttt{SectorPackedCost.indexed\_history\_cost\_pack\_eq}
+applies to every indexed sector path, including arbitrary terminal paths
+quantified over in the external finite premise. Its complete full-row
+history is supported, and its packed 0/1 cost equals the full-row cost.
+\texttt{CostSetInvariant.cost\_eq\_of\_mem\_iff} proves that exact cost
+depends only on which historical forms occurred. Its packed corollary
+shows that deleting repeated supported forms leaves the cost unchanged,
+matching the mathematical role of the C++ history bitset.
+For every indexed sector path, the theorem
+\texttt{IndexedHistoryBits.indexed\_history\_bit\_iff} identifies each
+bit in the abstract search history exactly with membership of the
+corresponding supported full row in the complete retained history.
+Define $\mathcal H_s(h)$ as the supported full rows whose packed indices
+are set in history bitset $h$. The theorem
+\texttt{StateHistoryCost.indexed\_cost\_eq\_decoded} proves, for every
+indexed path and every passive target, that its full historical 0/1 cost
+equals the cost computed from $\mathcal H_s(h)$ at the terminal state.
+Thus the mathematical terminal cost depends only on the complete state.
+The imperative C++ loop remains an external implementation of that
+packed recurrence.
+The two remaining-cost bounds and their maximum are proved for full
+13-coordinate states, with sound pruning and an application to actual
+core suffixes. Lean now also proves that any legal short full word maps to
+an accepted path of the abstract search when the concrete prefix lookup is
+complete. For every sector, the exact passive cost of that path's full-row
+history is bounded by the length of the original word. The theorem
+\texttt{ConcreteFiniteBoundary.exact\_minimum\_of\_external\_finite\_result}
+therefore concludes the minimum nineteen from one explicitly named premise,
+\texttt{ExternalFiniteResult}. Here $P_s$ denotes the passive-output indices of sector $s$, and $M_s$
+its oriented target matrix. The premise asserts complete concrete prefix
+lookups and, for every sector $s$ and depth $k$ within its cap, that each terminal
+state $z$ in the deduplicated abstract frontier $F_{s,k}$ satisfies
+\[
+  k+\sum_{j\in P_s}\operatorname{cost}_{\mathcal H_s(z.\mathrm{history})}
+       (e_j\oplus M_s[j])>18.
+\]
+\texttt{FiniteFrontierBoundary.no\_cheap\_terminal\_of\_frontier}
+transfers this state-and-depth condition to the path-quantified premise
+of the general lower-bound theorem. The unconditional proposition is
+\begin{lstlisting}[numbers=none]
+def NoShortProgram : Prop :=
+  forall p : Program, Legal p -> p.length <= 18 ->
+    Not (run identity p = target)
+\end{lstlisting}
+At this draft stage it is an open Lean proposition, not an added axiom.
+The conditional theorem does not make the external finite premise
+kernel-verified. Its data and implementation correspondence are reviewed
+in \texttt{anc/evidence/cpp\_refinement\_audit.md}; a static review is not a
+formal proof of C++ semantics. The build and transitive-axiom audit record
+which mathematical statements Lean accepts. Full kernel replay of all
+sectors is outside this project's scope. No \texttt{sorry} or native
+reduction trust axiom occurs in the accepted development.
+
+\section*{Acknowledgements}
+The author acknowledges OpenAI, the Astra AI assistant, and the CayleyPy
+project. AI assistance was used in preparing the manuscript, examining the
+computational evidence, and developing the Lean formalization with its explicit external finite premise.
+Responsibility for the final mathematical claims and their presentation
+rests with the author.
+
+\begin{thebibliography}{9}
+\bibitem{pmh} K. N. Patel, I. L. Markov, and J. P. Hayes,
+``Optimal synthesis of linear reversible circuits,''
+\emph{Quantum Information and Computation} 8 (2008), 282--294.
+\url{https://www.rintonpress.com/xxqic8/qic-8-34/0282-0294.pdf}.
+\bibitem{bfj} A. Bu, E. Fan, and R. Joo,
+``Minimum Synthesis Cost of CNOT Circuits,'' arXiv:2408.07898 (2024).
+\url{https://arxiv.org/abs/2408.07898}.
+\bibitem{sp} A. Sodhani and K. K. Parhi,
+``Noise-Aware Synthesis of Quantum LDPC Encoder Circuits via Two-Sided
+Hamming Descent,'' arXiv:2607.04462 (2026).
+\url{https://arxiv.org/abs/2607.04462}.
+\end{thebibliography}
+
+\appendix
+\section{Complete source bundle of the current Lean development}\label{app:lean}
+The complete Lean sources are supplied under \texttt{anc/lean/}, with
+the pinned toolchain and Lake configuration. The package also includes
+\texttt{anc/verify\_lean.py}, source-bound build and axiom-audit evidence,
+the C++ run records, audit scripts, and \texttt{anc/lean-project.zip}.
+No compiled cache is needed. The ZIP is a separate source-package file;
+compiling this Prism project does not embed it as a PDF attachment.
+The table lists the principal modules; the source archive includes their
+dependencies and the full development.
+{\footnotesize\begin{longtable}{@{}p{.40\linewidth}p{.56\linewidth}@{}}\toprule
+Module&Role\\\midrule\endhead
+\texttt{HGP13.lean}&Full matrix semantics, exact witness, and the target
+minimum-length proposition.\\
+\texttt{Passive.lean}&Preservation of full core rows and exact row-update
+accounting.\\
+\texttt{Certificate.lean}&A sound interface for complete finite layer
+certificates.\\
+\texttt{FreeXor.lean}&Exact free XOR complexity ten and three necessary
+auxiliary values for the original masks.\\
+\texttt{Projection.lean}&Transfer from arbitrary full-matrix programs to
+the seven-bit free XOR model.\\
+\texttt{CountHelpers.lean}&List counting and duplicate-removal lemmas.\\
+\texttt{Budget.lean}&First-appearance and repeat accounting; the bound
+$L\geq16+u$.\\
+\texttt{ExactBudget.lean}&Exact operation budget and short-word saturation.\\
+\texttt{Transposition.lean}&Coefficientwise transposition and relabeling
+of arbitrary full CNOT words.\\
+\texttt{TransposeFree.lean}&First-appearance restriction and soundness of
+closed-set certificates.\\
+\texttt{TransposeCertificate.lean}&Kernel-checked finite certificates and
+complete coverage of auxiliary pairs.\\
+\texttt{TransposeTarget.lean}&Concrete transposed target and the parameter
+correspondence.\\
+\texttt{TransposeBudget.lean}&Concrete transpose XOR minimum, the bound
+$L\geq16+v$, and exact budgets.\\
+\texttt{ZeroSector.lean}&Coefficient parities and the analytic lower
+bound twenty for $u=v=0$.\\
+\texttt{SectorCover.lean}&Distinctness and complete coverage of the 363
+sector parameter records, with full-word semantics.\\
+\texttt{Catalogues.lean}&Abstract saturation completeness, actual auxiliary
+sets, size budgets, and the partial-history subset test.\\
+\texttt{TightRepeats.lean}&Saturated repeat classification, fresh private
+bits, and local restrictions on clean copies.\\
+\texttt{CleanPersistence.lean}&Current clean carriers, all three semantic
+core-history conditions, and exact history preservation under erasure.\\
+\texttt{PassiveCost.lean}&Exact 0/1 XOR costs, pair cancellation, and total
+passive-cost lower bounds.\\
+\texttt{PackedCostRefinement.lean}&Equality of full-row and packed-mask
+passive-cost recurrences for supported rows.\\
+\texttt{SectorPackedCost.lean}&Supported retained histories and passive
+target differences, with exact packed costs for arbitrary indexed paths.\\
+\texttt{CostSetInvariant.lean}&Exact cost depends only on historical set
+membership; duplicate packed forms can be removed.\\
+\texttt{IndexedHistoryBits.lean}&Exact correspondence between abstract
+history bits and full historical rows for every indexed path.\\
+\texttt{DepthFrontier.lean}&Exact depth-dependent breadth-first reachability
+after complete-state deduplication and inclusion of every accepted path.\\
+\texttt{StateHistoryCost.lean}&Exact reconstruction of full historical
+passive cost from the abstract terminal state's history bits.\\
+\texttt{FiniteFrontierBoundary.lean}&State-and-layer exclusion implies
+the path-quantified finite premise of the lower-bound theorem.\\
+\texttt{PassiveInsertion.lean}&Legal historical insertions and the attained
+minimum completion cost for each fixed core.\\
+\texttt{RemainingBound.lean}&Both remaining-cost bounds, their sound
+maximum, and application to actual core suffixes.\\
+\texttt{FullWordPath.lean}&A short full word follows an accepted abstract
+search path, conditional on concrete prefix completeness.\\
+\texttt{AbstractFiniteExclusion.lean}&General terminal-cost transfer and
+the minimum-length implication from explicit finite facts.\\
+\texttt{ConcreteFiniteBoundary.lean}&The conditional theorem for the two
+literal original and transposed lookup tables.\\
+\texttt{Audit.lean}&Transitive axiom checks for the accepted declarations.\\\bottomrule
+\end{longtable}}
+``Complete source bundle'' describes file coverage. The central lower-bound
+proposition remains open without the external finite premise, as stated in
+Section~\ref{sec:formal}; attaching all current sources does not turn the
+external computation into a kernel proof.
+
+\section{Full finite verifier}
+The following is the exact rerun source, not pseudocode.
+\lstinputlisting[language=C++,basicstyle=\ttfamily\fontsize{8}{8.8}\selectfont]{hgp13_verify.cpp}
+\end{document}

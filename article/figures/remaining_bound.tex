@@ -1,0 +1,18 @@
+\begin{tikzpicture}[font=\sffamily]
+  \node[proof title] at (8,7.25) {Why every remaining path costs at least $r+\lceil b/2\rceil$};
+  \node[proof box,text width=5.5cm,minimum height=1cm] (lefttop) at (3.35,5.7)
+    {$r$ rows differ between $X$ and $Z$; reserve one final update for each};
+  \node[proof orange,text width=5.5cm,minimum height=1cm] (righttop) at (12.65,5.7)
+    {candidate path: $r+k$ operations\\$r$ final updates $+$ $k$ extra operations};
+  \draw[proof arrow] (lefttop.east) -- (righttop.west);
+  \node[proof box,text width=5.4cm,minimum height=1.15cm] (discard) at (3.65,2.95)
+    {At most $k$ required increments belong to rows updated more than once.\\Discarding them removes at most $k$ distinct increments.};
+  \node[proof green,text width=5.4cm,minimum height=1.15cm] (create) at (12.35,2.95)
+    {Every remaining nonendpoint increment must appear as an intermediate row.\\The $k$ extra operations create at most $k$ such values.};
+  \draw[proof orange arrow] (lefttop.south) -- (discard.north);
+  \draw[proof green arrow] (righttop.south) -- (create.north);
+  \node[proof green,text width=9.5cm,minimum height=.9cm,font=\sffamily\Large\bfseries]
+    at (8,.8) {$b-k\le k\quad\Longrightarrow\quad k\ge\lceil b/2\rceil$};
+  \node[proof note] at (8,-.25)
+    {Adding the $r$ reserved final updates gives the admissible lower bound $r+\lceil b/2\rceil$.};
+\end{tikzpicture}

@@ -1,0 +1,19 @@
+\begin{tikzpicture}[font=\sffamily]
+  \node[proof title] at (8,5.75) {Transposition is a length-preserving correspondence};
+  \node[proof box,text width=3.3cm,minimum height=1.35cm] (orig) at (2.2,4)
+    {Original word\\$g_1,\ldots,g_L$\\realizes $M$};
+  \node[proof green,text width=3.6cm,minimum height=1.85cm,font=\sffamily\bfseries] (rule) at (8,4)
+    {reverse the order\\swap each gate's\\control and target\\apply the stated relabeling};
+  \node[proof box,text width=3.3cm,minimum height=1.35cm] (trans) at (13.8,4)
+    {Oriented transpose\\$g_L^\top,\ldots,g_1^\top$\\realizes $M^\top$};
+  \draw[proof arrow] (orig) -- (rule);
+  \draw[proof arrow] (rule) -- (trans);
+  \node[proof box,text width=4.5cm,minimum height=.9cm] (u) at (3.5,1.75)
+    {$u$: distinct source coordinates used as targets};
+  \node[proof box,text width=4.5cm,minimum height=.9cm] (v) at (12.5,1.75)
+    {$v$: distinct private outputs used as controls};
+  \draw[{Stealth[length=2.2mm]}-{Stealth[length=2.2mm]},draw=prooforange,line width=1pt] (u) -- (v)
+    node[midway,above,text=prooforange,font=\bfseries] {$u\longleftrightarrow v$};
+  \node[proof note] at (8,.45)
+    {The word still has length $L$; transposition is not a free gate in the original model.};
+\end{tikzpicture}

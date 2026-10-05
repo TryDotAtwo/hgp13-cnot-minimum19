@@ -1,0 +1,16 @@
+\begin{tikzpicture}[font=\sffamily]
+  \node[proof title] at (8,8.2) {The proof changes description, not the physical problem};
+  \node[proof box,text width=10.2cm,minimum height=1.2cm,font=\sffamily\bfseries] (p) at (8,6.85)
+    {PHYSICAL WORD\\[-1pt]\normalfont 13 labelled rows; one row addition per CNOT};
+  \node[proof green,text width=10.2cm,minimum height=1.2cm,font=\sffamily\bfseries] (q) at (8,5.05)
+    {PROJECTED TRACE\\[-1pt]\normalfont 7 retained coefficients; first appearances form a free XOR trace};
+  \node[proof box,text width=10.2cm,minimum height=1.2cm,font=\sffamily\bfseries] (s) at (8,3.25)
+    {SECTOR CORE\\[-1pt]\normalfont selected sources + central row + selected controlling outputs};
+  \node[proof green,text width=10.2cm,minimum height=1.2cm,font=\sffamily\bfseries] (l) at (8,1.45)
+    {SEARCH LABEL\\[-1pt]\normalfont $(\mathcal R,D,C,T,I,\rho_c)$: sufficient memory for one prefix};
+  \draw[proof arrow] (p) -- (q);
+  \draw[proof arrow] (q) -- (s);
+  \draw[proof arrow] (s) -- (l);
+  \node[font=\sffamily\small\bfseries,text=prooforange] at (8,.25)
+    {Each downward step forgets information only after a lemma proves that it is safe.};
+\end{tikzpicture}

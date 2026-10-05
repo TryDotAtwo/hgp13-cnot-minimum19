@@ -1,0 +1,22 @@
+\begin{tikzpicture}[font=\sffamily]
+  \node[proof title] at (8,6) {Why the sector $u=v=0$ already costs at least twenty};
+  \node[proof box,text width=13.7cm,minimum height=.9cm,font=\sffamily\bfseries]
+    at (8,5.05) {With $u=v=0$, only source rows can update the central row; only sources or the central row can update private outputs.};
+  \node[proof orange,text width=2.25cm,minimum height=1.05cm,font=\sffamily\bfseries] at (1.7,3.75)
+    {central row\\$\ge2+2m$};
+  \node[proof box,text width=2.25cm,minimum height=1.05cm,font=\sffamily\bfseries] at (4.85,3.75)
+    {$y_0,y_1$\\$\ge6-m$};
+  \node[proof box,text width=2.05cm,minimum height=1.05cm,font=\sffamily\bfseries] at (7.8,3.75)
+    {$y_2,y_3$\\$\ge4$};
+  \node[proof green,text width=2.55cm,minimum height=1.05cm,font=\sffamily\bfseries] at (10.85,3.75)
+    {$y_4$\\$\ge\min(4,6-m)$};
+  \node[proof green,text width=2.25cm,minimum height=1.05cm,font=\sffamily\bfseries] at (14.15,3.75)
+    {$y_5$\\$\ge4-m_{be}$};
+  \node[proof note] at (8,2.75) {These costs add because the five groups have disjoint target rows.};
+  \node[proof green,text width=9.2cm,minimum height=.75cm,font=\sffamily\large\bfseries]
+    at (8,1.95) {$L\ge16+m_{ad}+\min(4,6-m_{be}-m_{ad})$};
+  \node[proof box,text width=5.4cm,minimum height=.75cm] at (4.35,.75)
+    {$m\le2\Rightarrow L\ge20+m_{ad}\ge20$};
+  \node[proof box,text width=5.4cm,minimum height=.75cm] at (11.65,.75)
+    {$m\ge2\Rightarrow L\ge22-m_{be}\ge20$};
+\end{tikzpicture}

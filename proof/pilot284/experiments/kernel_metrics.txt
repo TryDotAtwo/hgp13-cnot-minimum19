@@ -1,0 +1,3 @@
+exit_code=143
+elapsed_seconds=483
+sampled_peak_rss_kib=3741540

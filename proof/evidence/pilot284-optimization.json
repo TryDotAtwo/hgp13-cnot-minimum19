@@ -1,0 +1,22 @@
+{
+  "status": "standalone_kernel_check_passed_not_integrated",
+  "interpretation": "No measured speed improvement: 217 s versus baseline 212 s, with higher sampled RSS. Single-run comparison, not a statistical benchmark.",
+  "metrics": {
+    "exit_code": 0,
+    "elapsed_seconds": 217,
+    "sampled_peak_rss_kib": 2062896
+  },
+  "baseline_seconds": 212,
+  "baseline_sampled_peak_rss_kib": 1695108,
+  "theorem": "HGP13.SectorPilot284Cached.no_terminal",
+  "axioms": [
+    "propext",
+    "Quot.sound"
+  ],
+  "source_sha256": {
+    "pilot284\\experiments\\Cached.lean": "2a354846abe8e1da0b7445eea94579ae1001829dcda7adcc156f50584d76dce2",
+    "pilot284\\experiments\\cached.log": "b93e2032bc9e40d26eea20b821e74691244c78889807e3cdf6aca7f3e4217ca9",
+    "pilot284\\experiments\\cached_metrics.txt": "8a64749d75000c3b097e2fadbcea4776f8113ed521377d78f1a978a6946cf53e",
+    "pilot284\\experiments\\optimize.py": "a0f2c5256400a93ab2c896eb7eac95f51258b10a32d3c11dc2b6feb01f58cd70"
+  }
+}

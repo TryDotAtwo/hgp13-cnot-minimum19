@@ -1,0 +1,22 @@
+\begin{tikzpicture}[font=\sffamily]
+  \node[proof title] at (8,6.8) {Passive-target updates can be erased and charged back exactly};
+  \node[font=\sffamily\bfseries,text=proofnavy,anchor=east] at (2.05,5.35) {core history $\gamma$};
+  \draw[draw=proofblue,line width=1pt] (2.35,5.35) -- (14.8,5.35);
+  \foreach \x/\lab in {3.3/$w_1$,6.1/$w_2$,9.4/$w_3$,12.7/$w_4$}{
+    \fill[proofblue] (\x,5.35) circle (3pt);
+    \node[text=proofnavy,font=\small,above=4pt] at (\x,5.35) {\lab};
+  }
+  \node[font=\sffamily\bfseries,text=proofnavy,anchor=east] at (2.05,2.1) {passive row $j$};
+  \draw[draw=proofgray,line width=.7pt] (2.35,2.1) -- (14.8,2.1);
+  \node[proof gray,text width=1.45cm,font=\sffamily\small] at (2.95,2.1) {$y_j$};
+  \foreach \x/\lab in {3.3/$b_1$,6.1/$b_2$,12.7/$b_3$}{
+    \draw[proof green arrow,dashed] (\x,5.25) -- (\x,2.35);
+    \node[proof green,text width=1cm,font=\sffamily\scriptsize] at (\x,1.4) {add \lab};
+  }
+  \node[proof orange,text width=4.8cm,minimum height=.85cm,font=\sffamily\bfseries] (erase)
+    at (9.35,3.55) {erase these transmissions;\\the core rows do not change};
+  \draw[proof orange arrow] (erase.south west) -- (7.2,2.5);
+  \node[proof green,text width=10.8cm,minimum height=.8cm,font=\sffamily\bfseries]
+    at (8,.25) {$b_1+b_2+b_3=f_j$ illustrates one completion; the optimum is
+      $\delta_D(f_j)=\min\{|B|:\bigoplus_{b\in B}b=f_j\}$.};
+\end{tikzpicture}

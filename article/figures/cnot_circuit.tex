@@ -1,0 +1,46 @@
+\begin{tikzpicture}[font=\sffamily]
+  \node[proof title] at (8,7.6) {A chronological nineteen-gate witness};
+  \foreach \i in {0,...,12}{
+    \pgfmathsetmacro{\yy}{6.8-.48*\i}
+    \draw[proofgray,line width=.45pt] (.65,\yy) -- (15.55,\yy);
+    \node[text=proofnavy,anchor=east,font=\scriptsize] at (.52,\yy) {\i};
+  }
+  \foreach \k in {1,...,19}{
+    \pgfmathsetmacro{\xx}{.58+.78*\k}
+    \node[text=proofgray,font=\tiny] at (\xx,7.13) {\k};
+  }
+  \newcommand{\drawcnot}[4]{%
+    \pgfmathsetmacro{\xx}{.58+.78*#1}%
+    \pgfmathsetmacro{\yc}{6.8-.48*#2}%
+    \pgfmathsetmacro{\yt}{6.8-.48*#3}%
+    \draw[draw=#4,line width=.65pt] (\xx,\yc) -- (\xx,\yt);
+    \fill[#4] (\xx,\yc) circle (2.2pt);
+    \draw[draw=#4,line width=.65pt,fill=white] (\xx,\yt) circle (4pt);
+    \draw[draw=#4,line width=.65pt] ([xshift=-3pt]\xx,\yt) -- ([xshift=3pt]\xx,\yt)
+      ([yshift=-3pt]\xx,\yt) -- ([yshift=3pt]\xx,\yt);
+  }
+  \drawcnot{1}{0}{9}{proofblue}
+  \drawcnot{2}{1}{9}{proofblue}
+  \drawcnot{3}{1}{10}{proofblue}
+  \drawcnot{4}{2}{10}{proofblue}
+  \drawcnot{5}{2}{12}{proofblue}
+  \drawcnot{6}{5}{12}{proofblue}
+  \drawcnot{7}{3}{0}{proofgreen}
+  \drawcnot{8}{0}{11}{proofgreen}
+  \drawcnot{9}{4}{1}{proofgreen}
+  \drawcnot{10}{1}{11}{proofgreen}
+  \drawcnot{11}{1}{12}{proofgreen}
+  \drawcnot{12}{1}{7}{proofgreen}
+  \drawcnot{13}{0}{6}{proofgreen}
+  \drawcnot{14}{8}{7}{proofblue}
+  \drawcnot{15}{8}{6}{proofblue}
+  \drawcnot{16}{2}{8}{proofblue}
+  \drawcnot{17}{5}{8}{proofblue}
+  \drawcnot{18}{4}{1}{prooforange}
+  \drawcnot{19}{3}{0}{prooforange}
+  \draw[decorate,decoration={brace,amplitude=4pt},draw=prooforange]
+    (14.38,.68) -- (15.55,.68)
+    node[midway,below=5pt,text=prooforange,font=\scriptsize\bfseries] {restore sources};
+  \node[proof note,anchor=west] at (.65,.18)
+    {filled dot = control; circled $+$ = target; time runs from left to right};
+\end{tikzpicture}

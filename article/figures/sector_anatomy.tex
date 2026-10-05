@@ -1,0 +1,15 @@
+\begin{tikzpicture}[font=\sffamily]
+  \node[proof title] at (8,6.2) {What a sector keeps in the core};
+  \node[proof green,text width=9cm,minimum height=1.6cm,font=\sffamily\bfseries] (core) at (8,4.65)
+    {SEARCHED CORE\\$p=|A|$ selected sources\\+ one central row\\+ $q=|R|$ selected outputs};
+  \node[proof gray,text width=4.6cm,minimum height=1.05cm] (fixed) at (3.55,2.55)
+    {$6-p$ fixed sources\\may control but are never targeted};
+  \node[proof orange,text width=4.6cm,minimum height=1.05cm] (passive) at (12.45,2.55)
+    {$6-q$ passive outputs\\may be targeted but never control};
+  \draw[proof arrow,dashed] (core.south west) -- (fixed.north);
+  \draw[proof orange arrow,dashed] (core.south east) -- (passive.north);
+  \node[font=\sffamily\large\bfseries,text=proofnavy] at (8,1.2)
+    {core dimension: $n_{\rm core}=p+1+q+(6-p)=7+q\le9$};
+  \node[proof note] at (8,.35)
+    {Membership in $R$ is permission to control, not proof that control occurs.};
+\end{tikzpicture}

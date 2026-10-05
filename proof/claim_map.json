@@ -1,0 +1,946 @@
+{
+  "source": {
+    "filename": "HGP13_19_CNOT_self_contained_proof.pdf",
+    "sha256": "40b0431c02782e6f1810dee9c5de2d3240e461d3e44724f8fe7c052c5e2f5770"
+  },
+  "conventions": {
+    "n": 13,
+    "field": "GF(2)",
+    "gate": "row[t] ^= row[c], c != t",
+    "cost": 1,
+    "ancillas": false,
+    "free_permutations": false,
+    "restricted_inputs": false,
+    "target_rows": [
+      1,
+      2,
+      4,
+      8,
+      16,
+      32,
+      329,
+      402,
+      292,
+      515,
+      1030,
+      2075,
+      4150
+    ]
+  },
+  "evidence": "evidence/lean_verification.json",
+  "claims": [
+    {
+      "id": "source.3.2",
+      "status": "kernel_verified",
+      "statement": "Original seven target masks have free XOR complexity exactly ten.",
+      "source_locator": "printed page 4, Lemma 3.2",
+      "declarations": [
+        "HGP13.FreeXor.original_masks_exact_minimum_ten"
+      ]
+    },
+    {
+      "id": "source.3.3.general",
+      "status": "open",
+      "statement": "For every m by n binary matrix with no zero rows or columns, a(T^T)=a(T)+m-n.",
+      "source_locator": "printed page 5, Lemma 3.3",
+      "declarations": []
+    },
+    {
+      "id": "source.3.3.concrete",
+      "status": "kernel_verified",
+      "statement": "The specified transpose masks [21,62,104,17,50,96,67] have free XOR complexity ten; this is proved directly, without assuming the general transposition principle.",
+      "source_locator": "printed page 5, equation (3) and its complexity conclusion",
+      "declarations": [
+        "HGP13.TransposeBudget.original_exact_free_minimum_ten",
+        "HGP13.TransposeBudget.three_auxiliaries",
+        "HGP13.TransposeCertificate.all_checked",
+        "HGP13.TransposeCertificate.two_extras_impossible"
+      ]
+    },
+    {
+      "id": "source.word_transposition",
+      "status": "kernel_verified",
+      "statement": "For every full 13-coordinate CNOT word, reversing order and swapping endpoints transposes all coefficients, preserves length and legality; the specified coordinate relabeling is an alphabet bijection.",
+      "source_locator": "printed page 5, paragraphs following equation (3)",
+      "declarations": [
+        "HGP13.Transposition.full_program_transpose",
+        "HGP13.Transposition.dual_length",
+        "HGP13.Transposition.dual_legal",
+        "HGP13.Transposition.full_program_oriented",
+        "HGP13.Transposition.oriented_length",
+        "HGP13.Transposition.oriented_legal",
+        "HGP13.TransposeTarget.realizes_oriented",
+        "HGP13.TransposeTarget.touched_sources_length"
+      ]
+    },
+    {
+      "id": "source.4.1",
+      "status": "kernel_verified",
+      "statement": "Every realization of the fixed full target satisfies L>=16+u and L>=16+v. In each orientation a>=3 and L=13+a+u+e, with e the natural count of repeats beyond the 6+u mandatory ones.",
+      "source_locator": "printed page 6, Lemma 4.1, equations (4)-(5)",
+      "declarations": [
+        "HGP13.Budget.length_ge_sixteen_plus_u",
+        "HGP13.TransposeBudget.length_ge_sixteen_plus_v",
+        "HGP13.ExactBudget.exact_budget",
+        "HGP13.TransposeBudget.exact_oriented_budget"
+      ]
+    },
+    {
+      "id": "source.4.1.short_consequences",
+      "status": "kernel_verified",
+      "statement": "Length <=18 implies u,v<=2. If u=2 then L=18,a=3,e=0; if u=1 then a+e<=4, in either orientation.",
+      "source_locator": "printed page 6, paragraph following proof of Lemma 4.1",
+      "declarations": [
+        "HGP13.TransposeBudget.short_program_small_sector",
+        "HGP13.ExactBudget.two_sources_saturation",
+        "HGP13.ExactBudget.one_source_budget",
+        "HGP13.TransposeBudget.two_sources_saturation",
+        "HGP13.TransposeBudget.one_source_budget"
+      ]
+    },
+    {
+      "id": "source.5.1",
+      "status": "kernel_verified",
+      "statement": "Every legal full-matrix realization with u=v=0 has length at least twenty. The proof derives gate-count constraints from actual coefficients and sums disjoint target costs.",
+      "source_locator": "printed pages 6-7, Lemma 5.1",
+      "declarations": [
+        "HGP13.ZeroSector.zero_sector_lower_bound",
+        "HGP13.ZeroSector.simple_of_zero",
+        "HGP13.ZeroSector.actual_bounds",
+        "HGP13.ZeroSector.numeric_lower_bound",
+        "HGP13.ZeroSector.sum_hits_length"
+      ]
+    },
+    {
+      "id": "source.sector_cover",
+      "status": "kernel_verified",
+      "statement": "The explicit list of 363 distinct physical-label sector parameter records covers every legal realization of length <=18, with exact active-source membership and a containing set of output controls. The chosen orientation preserves legality, length and the appropriate full operator. This does not assert completeness of the later normalized search-state representation.",
+      "source_locator": "printed page 7, Section 6",
+      "declarations": [
+        "HGP13.SectorCover.full_sector_cover",
+        "HGP13.SectorCover.sectors_length",
+        "HGP13.SectorCover.sectors_nodup",
+        "HGP13.SectorCover.active_is_used",
+        "HGP13.SectorCover.source_target_is_active",
+        "HGP13.SectorCover.output_control_is_carrier"
+      ]
+    },
+    {
+      "id": "source.7.1",
+      "status": "kernel_verified",
+      "statement": "Finite XOR saturation is equivalent to existence of a first-appearance free program, independent of complete scheduling order. The actual extra values of every full realization belong to the abstract catalogue in either orientation. Under the short-word budgets the sizes are three or four, and exactly three when two sources change. Subsets of actual histories pass the abstract extendibility test. Concrete serialized tables and their cardinalities are not covered.",
+      "source_locator": "printed pages 7-8, Lemma 7.1 and abstract prefix condition",
+      "declarations": [
+        "HGP13.Catalogues.catalogue_characterization",
+        "HGP13.Catalogues.closed_schedule_equivalent",
+        "HGP13.Catalogues.accepts_of_relaxed_program",
+        "HGP13.Catalogues.original_catalogue",
+        "HGP13.Catalogues.transpose_catalogue",
+        "HGP13.Catalogues.original_short_catalogue",
+        "HGP13.Catalogues.transpose_short_catalogue",
+        "HGP13.Catalogues.original_tight_catalogue",
+        "HGP13.Catalogues.transpose_tight_catalogue",
+        "HGP13.Catalogues.partial_history_extendible"
+      ]
+    },
+    {
+      "id": "source.catalogue_enumeration",
+      "status": "open",
+      "statement": "Kernel-checked completeness of the concrete triple and quadruple enumeration, serialized prefix lookup and reported cardinalities 298/21687/298/21823.",
+      "source_locator": "printed page 8, Section 7 implementation and counts",
+      "declarations": [],
+      "external_evidence": "evidence/independent_catalogue_audit.json",
+      "external_evidence_scope": "Independent exhaustive C++17 enumeration reproduces all four key sets and counts; it does not close the kernel claim."
+    },
+    {
+      "id": "source.8.1",
+      "status": "kernel_verified",
+      "statement": "In either orientation, for every realization of length <=18 touching two sources and at every prefix, a private output with projection zero still has its initial full row, and its private coefficient is absent from every other row. The saturated repeat list is exactly the six private outputs and the two touched sources, with no duplicate targets; every update has nonzero projection.",
+      "source_locator": "printed pages 8-9, saturated-budget classification and Lemma 8.1",
+      "declarations": [
+        "HGP13.TightRepeats.original_repeats_permutation",
+        "HGP13.TightRepeats.transpose_repeats_permutation",
+        "HGP13.TightRepeats.original_no_zero",
+        "HGP13.TightRepeats.transpose_no_zero",
+        "HGP13.TightRepeats.original_fresh_private_bit",
+        "HGP13.TightRepeats.transpose_fresh_private_bit"
+      ]
+    },
+    {
+      "id": "source.8.2.local",
+      "status": "kernel_verified",
+      "statement": "A repeated nonbasis projection is a copy into an intact private output and adds that output coefficient, previously absent from its control. A clean nonbasis result must be globally new. A final nonbasis row is either globally new or copied from its exact clean goal into the intact private output. These statements apply to every transition of a short full realization in both orientations.",
+      "source_locator": "printed page 9, local assertions of Lemma 8.2",
+      "declarations": [
+        "HGP13.TightRepeats.repeated_nonbasis_copy",
+        "HGP13.TightRepeats.seenAfter_members",
+        "HGP13.TightRepeats.original_clean_nonbasis_is_new",
+        "HGP13.TightRepeats.transpose_clean_nonbasis_is_new",
+        "HGP13.TightRepeats.original_final_row_dichotomy",
+        "HGP13.TightRepeats.transpose_final_row_dichotomy"
+      ]
+    },
+    {
+      "id": "source.8.core_conditions",
+      "status": "kernel_verified",
+      "statement": "All three semantic core-history conditions hold at every prefix of a full short realization with two touched sources, in either orientation: a seen central goal is already final; an unfinished kept output with a seen goal remains its full initial row and has a current exact clean core carrier; a seen passive goal has its exact clean form in core history. Core history is preserved and reflected by erasing passive-target operations. These are full-row semantic conditions; correspondence to the executable normalized bitset state remains in source.12.1.",
+      "source_locator": "printed pages 9-10, consequences of Lemma 8.2 and Section 8.1",
+      "declarations": [
+        "HGP13.CleanPersistence.clean_row_backward",
+        "HGP13.CleanPersistence.unfinished_output_carrier",
+        "HGP13.CleanPersistence.passive_fresh_no_core_history",
+        "HGP13.CleanPersistence.core_history_erasure_iff",
+        "HGP13.CleanPersistence.original_core_conditions",
+        "HGP13.CleanPersistence.transpose_core_conditions"
+      ]
+    },
+    {
+      "id": "source.9.1",
+      "status": "kernel_verified",
+      "statement": "For a fixed legal core with correct final core rows, exact completion cost is its length plus the sum of minimum XOR costs over full historical core forms. The 0/1 recurrence has an exact representation specification; arbitrary repeated transmissions cannot improve it, and a distinct-form minimum is attained. Legal insertions realize all passive optima simultaneously with exactly the same erased core word. Existence of the needed costs is proved for both concrete targets from seven retained initial basis rows. Lean also proves equality of the full-row and packed-mask recurrences on supported rows. Imperative C++ array correspondence remains in source.12.1. For every actual compatible sector core, Lean proves its passive-target deltas are supported and the exact packed recurrence equals the full-row recurrence on its complete historical rows. More generally, for every indexed sector path, all retained historical rows and passive target differences are supported, and their full-row and packed 0/1 costs agree; this is independent of whether the path came from a realizing full word. Exact passive cost depends only on the set of available full-row forms; deleting duplicate supported historical rows also preserves packed cost.",
+      "source_locator": "printed pages 10-11, Lemma 9.1 and equations (6)-(9)",
+      "declarations": [
+        "HGP13.PassiveCost.cost_atMost_iff",
+        "HGP13.PassiveCost.cost_attains_distinct",
+        "HGP13.PassiveCost.cost_le_arbitrary",
+        "HGP13.PassiveCost.total_cost_lower_bound",
+        "HGP13.PassiveCost.core_length_bound",
+        "HGP13.PassiveInsertion.insert_many_optimal",
+        "HGP13.PassiveInsertion.historyRows_exact",
+        "HGP13.PassiveInsertion.exact_passive_minimum",
+        "HGP13.PassiveInsertion.original_exact_passive_minimum",
+        "HGP13.PassiveInsertion.transpose_exact_passive_minimum",
+        "HGP13.PackedCostRefinement.cost_pack_eq",
+        "HGP13.SectorPackedCost.passive_delta_supported",
+        "HGP13.SectorPackedCost.actual_core_cost_pack_eq",
+        "HGP13.SectorPackedCost.history_rows_supported",
+        "HGP13.SectorPackedCost.indexed_gates_retained",
+        "HGP13.SectorPackedCost.indexed_history_cost_pack_eq",
+        "HGP13.CostSetInvariant.cost_eq_of_mem_iff",
+        "HGP13.CostSetInvariant.packed_cost_eraseDups"
+      ]
+    },
+    {
+      "id": "source.9.1.core_preservation",
+      "status": "kernel_verified",
+      "statement": "Erasing passive-target gates preserves full core rows when passive coordinates never control.",
+      "source_locator": "part of Lemma 9.1 only",
+      "declarations": [
+        "HGP13.erase_passive_preserves_core"
+      ]
+    },
+    {
+      "id": "source.10.1",
+      "status": "kernel_verified",
+      "statement": "For arbitrary full 13-coordinate matrices, every CNOT path has length at least r+ceil(b/2), proved by a one-step potential inequality. For reachable states, required touches of currently restored coordinates give the independent r+2a bound; their maximum is sound for pruning. Reachable full matrices have no zero rows. The bounds are connected to actual prefixes and erased core suffixes. Equality with the executable compressed-coordinate counters remains in source.12.1.",
+      "source_locator": "printed page 11, Lemma 10.1 and equations (10)-(11)",
+      "declarations": [
+        "HGP13.RemainingBound.potential_step",
+        "HGP13.RemainingBound.missing_delta_lower_bound",
+        "HGP13.RemainingBound.reachable_rows_nonzero",
+        "HGP13.RemainingBound.required_returns_lower_bound",
+        "HGP13.RemainingBound.remaining_lower_bound",
+        "HGP13.RemainingBound.remaining_prune_sound",
+        "HGP13.RemainingBound.prefix_remaining_bound",
+        "HGP13.RemainingBound.core_prefix_remaining_bound"
+      ]
+    },
+    {
+      "id": "source.12.1",
+      "status": "open",
+      "statement": "Every short full word maps to a non-pruned history with the correct terminal cost.",
+      "source_locator": "Lemma 12.1",
+      "declarations": [],
+      "partial_results": [
+        {
+          "status": "kernel_verified",
+          "statement": "Restriction along an injective coordinate map preserves CNOT execution, legality and length; every word whose endpoints lie in the image has a restricted word. Supported retained rows lose no coefficients. Concrete sector embeddings and packed-state correspondence are separate obligations tracked by later partial results.",
+          "declarations": [
+            "HGP13.CoordinateRestriction.normalized_word_exists",
+            "HGP13.CoordinateRestriction.run_supported",
+            "HGP13.CoordinateRestriction.restriction_faithful"
+          ]
+        },
+        {
+          "status": "kernel_verified",
+          "statement": "Every legal full realization of length <=18 has a covered sector whose core is a legal word on the explicit 7+q retained coordinates, including all six sources, of length <=12+q, reaching the restricted full endpoint. Inactive sources are fixed at every prefix. Retained rows are supported on the selected columns, and discarded passive basis rows cannot affect availability of supported deltas. This coordinate result alone does not establish packed histories, event counters, catalogue completeness or transition/pruning correspondence.",
+          "declarations": [
+            "HGP13.SectorCoordinates.every_short_normalized",
+            "HGP13.SectorCoordinates.layout_properties",
+            "HGP13.SectorCoordinates.fixed_source_prefix",
+            "HGP13.SectorCoordinates.retained_target_changes",
+            "HGP13.SectorCoordinates.core_prefix_invariants",
+            "HGP13.SectorCoordinates.delta_available_iff"
+          ]
+        },
+        {
+          "status": "kernel_verified",
+          "statement": "Low-bit-first BitVec encoding preserves actual CNOT execution and reflects equality/zero on supported rows. Every hypothetical short realization has the packed sector core and correct endpoint. Its low seven bits equal the source projection. Scalar history membership, insertion and 64-bit word access are exact; packed indices lie in the eight-word range. Starting from retained initial rows and inserting only each new target form records exactly the real core history. Concrete initialization and projected-history folding are tracked below; event counters, catalogue completeness and shared transition/pruning correspondence remain open.",
+          "declarations": [
+            "HGP13.PackedRows.every_short_packed",
+            "HGP13.PackedRows.pack_faithful",
+            "HGP13.PackedRows.pack_zero_iff",
+            "HGP13.PackedRows.pack_nat_xor",
+            "HGP13.PackedRows.packed_projection",
+            "HGP13.PackedRows.limb_has",
+            "HGP13.PackedRows.hasWords_remember",
+            "HGP13.PackedRows.packed_word_index_bound",
+            "HGP13.PackedRows.actual_trace_history"
+          ]
+        },
+        {
+          "status": "kernel_verified",
+          "statement": "Folding the full 512-bit history into projected seven-bit membership is exact, including the two-word accumulation of eight 64-bit limbs. For every retained sector, the literal initial history, active/core rows, fixed controls and target row masks agree with the full matrix encoding. Starting from these literal initial histories, projected membership is equivalent to existence of an actual core historical form with that projection. This does not establish event-counter semantics, concrete catalogue-prefix completeness, or the unified pruned transition system.",
+          "declarations": [
+            "HGP13.ProjectedHistory.fold_encode",
+            "HGP13.ProjectedHistory.word_fold_has",
+            "HGP13.ProjectedHistory.actual_projected_words",
+            "HGP13.ProjectedHistory.sector_literals",
+            "HGP13.ProjectedHistory.literal_history_projection"
+          ]
+        },
+        {
+          "status": "kernel_verified",
+          "statement": "The parameterized shared search specification has initial rows, history, fixed controls and target rows equal to the full-matrix encoding for every sector and any catalogue lookup. Its next list enumerates exactly all successful move calls. This does not prove correspondence of those moves, guards or counters with arbitrary full words. Separately, any potential that starts at zero and increases by at most one along each available XOR gives a certified lower bound on passive XOR cost; seven-bit potentials lift to full rows.",
+          "declarations": [
+            "HGP13.SharedSearch.initial_matches_full_matrix",
+            "HGP13.SharedSearch.next_iff",
+            "HGP13.CostPotential.xor_bound",
+            "HGP13.CostPotential.cost_bound",
+            "HGP13.CostPotential.projected_valid"
+          ]
+        },
+        {
+          "status": "kernel_verified",
+          "statement": "A checked potential directly bounds real XOR contribution lists. With a cover of the actual full-row control history, the exact retained/passive target partition, and a potential bound above 18, the full CNOT word has length above 18. No exact DP-cost function is assumed. Supplying those history and potential premises from every short word remains part of the open search-completeness obligation.",
+          "declarations": [
+            "HGP13.ContributionCompletion.excludes_contributions",
+            "HGP13.ContributionCompletion.excludes_full_program"
+          ]
+        },
+        {
+          "status": "kernel_verified",
+          "statement": "For the covered transpose sector with active source [2] and no carriers, lifting a seven-bit mask into full columns 0..5 and 8 is supported and inverts packing. Therefore every supported full row is recovered exactly. This decoder result is specific to the no-carrier sector and must not be reused for sectors with private carrier bits.",
+          "declarations": [
+            "HGP13.Sector359Encoding.sector_member",
+            "HGP13.Sector359Encoding.lift_supported",
+            "HGP13.Sector359Encoding.lift_pack",
+            "HGP13.Sector359Encoding.unpack_actual"
+          ]
+        },
+        {
+          "status": "kernel_verified",
+          "statement": "The shared move is exactly equivalent to an explicit seven-check proposal. A labeled path exists exactly when all checks hold along its deterministic raw execution, with the resulting endpoint. Changed, returned and copied masks record their specified events, and extra is the exact accumulated count of seen nonmandatory events in this model. These statements expose the guard obligations; they do not show that arbitrary full CNOT words satisfy them or identify the model extra counter with the full-word budget.",
+          "declarations": [
+            "HGP13.TransitionChecks.move_eq_checked",
+            "HGP13.TransitionChecks.move_eq_some_iff",
+            "HGP13.TransitionChecks.path_iff",
+            "HGP13.TransitionChecks.successful_move_rows",
+            "HGP13.TransitionChecks.successful_move_history",
+            "HGP13.TransitionChecks.raw_changed",
+            "HGP13.TransitionChecks.raw_returned",
+            "HGP13.TransitionChecks.raw_copied",
+            "HGP13.TransitionChecks.raw_extra",
+            "HGP13.TransitionChecks.accepted_extra_budget"
+          ]
+        },
+        {
+          "status": "kernel_verified",
+          "statement": "For an explicit disjoint mutable/fixed wire partition with distinct mutable wires, correctly encoded starting rows and fixed controls, every indexed gate sequence has raw search rows equal to the packed rows of its full-matrix execution. Its raw history equals the full execution trace history from the same initial history bits. This generic encoding theorem does not yet construct the indices for every covered original word or prove its seven guards.",
+          "declarations": [
+            "HGP13.CoreRowEncoding.control_read",
+            "HGP13.CoreRowEncoding.advance_rows",
+            "HGP13.CoreRowEncoding.fixed_rows_step",
+            "HGP13.CoreRowEncoding.raw_rows_run",
+            "HGP13.CoreRowEncoding.advance_history",
+            "HGP13.CoreRowEncoding.raw_history_run"
+          ]
+        },
+        {
+          "status": "kernel_verified",
+          "statement": "For every covered sector and compatible full word, the retained core admits mutable/fixed search indices of exactly the same length. The raw search rows and history agree with full-matrix core execution, and a word realizing the target has raw endpoint rows equal to the search target. All 363 wire partitions are checked. This does not prove accepted reachability, the changed-mask terminal condition, or any of the seven pruning guards.",
+          "declarations": [
+            "HGP13.SectorIndexing.partitions_checked",
+            "HGP13.SectorIndexing.partition_properties",
+            "HGP13.SectorIndexing.core_indexed",
+            "HGP13.SectorIndexing.core_raw_execution",
+            "HGP13.SectorIndexing.core_final_rows",
+            "HGP13.SectorIndexing.core_raw_target"
+          ]
+        },
+        {
+          "status": "kernel_verified",
+          "statement": "Raw repeat counts partition exactly into extra and repeated mandatory events. Extra is monotone along prefixes; an endpoint bound implies every prefix extra guard. Source returns are repeats in every covered sector. Copies are repeats when their selected control projection is known. Given mandatory-event coverage, a repeat-count injection including erased passive first copies, and the full repeat budget, raw extra is at most the initial extra plus the full excess budget. These semantic coverage/injection premises remain open for arbitrary full words; this is not an unconditional extra bound.",
+          "declarations": [
+            "HGP13.CounterBudget.repeat_partition",
+            "HGP13.CounterBudget.extra_prefix",
+            "HGP13.CounterBudget.extra_guard_of_endpoint_bound",
+            "HGP13.CounterBudget.sector_return_is_repeat",
+            "HGP13.CounterBudget.copy_is_repeat",
+            "HGP13.CounterBudget.repeat_partition_mandatory",
+            "HGP13.CounterBudget.extra_le_full_budget"
+          ]
+        },
+        {
+          "status": "kernel_verified",
+          "statement": "For every covered sector and every indexed word, each selected control projection is present in the projected raw history. Therefore all copy events and all mandatory events are repeats, at every prefix, without an assumed known-control or MandatorySeen premise. Raw repeat count equals extra plus mandatory-event count. Counting enough distinct mandatory events and injecting repeats into the full-word trace remain open; accepted reachability and the global lower bound are not established.",
+          "declarations": [
+            "HGP13.KnownControls.trace_projection",
+            "HGP13.KnownControls.current_projection_known",
+            "HGP13.KnownControls.raw_control_known",
+            "HGP13.KnownControls.raw_copy_is_repeat",
+            "HGP13.KnownControls.raw_mandatory_is_repeat",
+            "HGP13.KnownControls.indexed_mandatory_seen",
+            "HGP13.KnownControls.indexed_repeat_partition"
+          ]
+        },
+        {
+          "status": "kernel_verified",
+          "statement": "Distinct returned/copied bits newly set between the initial and final state require at least that many mandatory events: fresh returns and fresh copies are disjoint event kinds. Any carrier row going from zero to nonzero projection forces its copied bit. Initial and target carrier shapes are checked for all sectors, so target rows force all carrier copied bits; this is instantiated for every compatible full word realizing the target. Returned-source endpoint coverage and the full-trace repeat injection remain open.",
+          "declarations": [
+            "HGP13.MandatoryCount.mask_count_bound",
+            "HGP13.MandatoryCount.mandatory_split",
+            "HGP13.MandatoryCount.mandatory_endpoint_bound",
+            "HGP13.MandatoryCount.copied_of_zero_to_nonzero",
+            "HGP13.MandatoryCount.carrier_shapes_checked",
+            "HGP13.MandatoryCount.target_forces_copied",
+            "HGP13.MandatoryCount.covered_core_copied"
+          ]
+        },
+        {
+          "status": "kernel_verified",
+          "statement": "Every row after a legal CNOT word is nonzero, proved by transposition and preservation of zero columns under inverse execution. Consequently each next row update genuinely changes its target, including under faithful supported packing. A source-tracking invariant proves that any touched source returning to its basis row has its returned bit set, provided all indexed updates genuinely change their target. The bridge supplying this effectiveness and source occurrence from every covered full word remains open.",
+          "declarations": [
+            "HGP13.NonzeroRows.legal_rows_nonzero",
+            "HGP13.NonzeroRows.legal_next_changes",
+            "HGP13.NonzeroRows.legal_step_nonzero",
+            "HGP13.NonzeroRows.packed_row_nonzero",
+            "HGP13.NonzeroRows.packed_next_changes",
+            "HGP13.ReturnTracking.tracked_run",
+            "HGP13.ReturnTracking.target_forces_returned"
+          ]
+        },
+        {
+          "status": "kernel_verified",
+          "statement": "Every legal indexed full-word prefix gives effective raw target changes, using full-row support and faithful packing. Every active source index occurs in a compatible core. Consequently every legal compatible word realizing the target has an indexed core with at least active.length + carriers.length mandatory events; no endpoint mask or effectiveness premise is assumed in this final theorem. The injection of raw repeats plus erased first copies into the full repeat trace remains open, so the extra guard and search completeness are not yet established.",
+          "declarations": [
+            "HGP13.IndexedEffectiveness.indexed_supported",
+            "HGP13.IndexedEffectiveness.raw_step_effective",
+            "HGP13.IndexedEffectiveness.indexed_effective",
+            "HGP13.IndexedEffectiveness.active_index_hit",
+            "HGP13.IndexedEffectiveness.covered_core_mandatory_count"
+          ]
+        },
+        {
+          "status": "kernel_verified",
+          "statement": "Chronological repeat counts survive passive erasure with multiplicity: core repeats plus 6-q passive mandatory copies are bounded by full-word repeats. Raw projected-history repeats reflect into the semantic core trace, including an event-count bound. Combining this with the mandatory-event lower bound and ten fresh forms proves length >= raw extra + 16 + u for every legal compatible realizing word. Consequently every prefix of its indexed core passes the actual SharedSearch extra guard whenever length <= 18. This closes only the extra guard; other guards and complete sector exclusion remain open.",
+          "declarations": [
+            "HGP13.RepeatErasure.erasure_bound",
+            "HGP13.RepeatErasure.core_plus_passive_repeats",
+            "HGP13.RepeatErasure.raw_repeat_reflects",
+            "HGP13.RepeatErasure.raw_repeat_bound",
+            "HGP13.RepeatErasure.covered_extra_length_bound",
+            "HGP13.RepeatErasure.covered_extra_guards"
+          ]
+        },
+        {
+          "status": "kernel_verified",
+          "statement": "The same indexed core of every legal compatible target-realizing word of length <=18 passes actual alphabet, zero and extra guards at every indexed split. Indices satisfy fixed/mutable bounds and distinct control/target; full supported row encoding gives the nonzero proposal result. For any indexed representation of a compatible realizing core, the changed mask and target rows satisfy the exact SharedSearch terminal predicate. Catalogue, core, passive and depth guards remain open; raw terminal status is not accepted reachability.",
+          "declarations": [
+            "HGP13.BasicGuards.indexed_alphabet",
+            "HGP13.BasicGuards.raw_value_full",
+            "HGP13.BasicGuards.indexed_zero",
+            "HGP13.BasicGuards.covered_three_guards",
+            "HGP13.BasicGuards.core_changed_mask",
+            "HGP13.BasicGuards.core_terminal"
+          ]
+        },
+        {
+          "status": "kernel_verified",
+          "statement": "At every indexed prefix, each changed source bit exactly records occurrence of its full wire as a target; the actual untouched-source count equals RemainingBound.untouched length. Faithful packed rows give exact mismatch counts on selected wires and a bound by full-matrix different-row counts, instantiated for raw prefix rows against SharedSearch.want of a compatible target-realizing core. Missing-delta availability/deduplication and composition with the remaining-depth bound are not yet proved for the actual depth guard.",
+          "declarations": [
+            "HGP13.UntouchedEncoding.changed_iff_target",
+            "HGP13.UntouchedEncoding.untouched_count",
+            "HGP13.UntouchedEncoding.packed_mismatch_count",
+            "HGP13.UntouchedEncoding.packed_mismatch_bound",
+            "HGP13.UntouchedEncoding.core_mismatch_bound"
+          ]
+        },
+        {
+          "status": "kernel_verified",
+          "statement": "Packed missing deltas reflect into full missing rows, including availability of fixed rows and exclusion of discarded basis rows; eraseDups cardinality is bounded without losing multiplicity assumptions. The actual state bound is at most RemainingBound.remaining and at most the actual indexed suffix length. Combining this with the core-depth limit proves the exact propose.depthBad=false at every indexed step of any compatible legal realization of length <=18. This applies to any indexed representation, including the same word from covered_three_guards. Catalogue/core/passive guards and complete sector exclusion remain open.",
+          "declarations": [
+            "HGP13.MissingEncoding.available_code",
+            "HGP13.MissingEncoding.missing_reflects",
+            "HGP13.MissingEncoding.packed_missing_bound",
+            "HGP13.MissingEncoding.core_missing_bound",
+            "HGP13.MissingEncoding.state_bound_semantic",
+            "HGP13.MissingEncoding.state_bound_suffix",
+            "HGP13.MissingEncoding.proposal_depth",
+            "HGP13.MissingEncoding.core_depth_guard"
+          ]
+        },
+        {
+          "status": "kernel_verified",
+          "statement": "For any indexed prefix of a legal compatible short realizing word with two active sources, the full semantic CoreConditions hold after lifting the filtered prefix back into the original word, in either orientation. Semantic full history implies the corresponding raw history bit, and raw projected history reflects to semantic projected history. Passive mask/clean-delta literals are checked for every sector. Consequently the exact propose.passiveBad is false at every indexed step when the two-source guard is enabled. The coreBad and catalogue guards, all-sector certificates and unconditional minimum remain open.",
+          "declarations": [
+            "HGP13.CorePrefixConditions.active_count",
+            "HGP13.CorePrefixConditions.indexed_prefix_conditions",
+            "HGP13.CorePrefixConditions.raw_contains_history",
+            "HGP13.CorePrefixConditions.raw_projected_reflects",
+            "HGP13.CorePrefixConditions.passive_literals_checked",
+            "HGP13.CorePrefixConditions.passive_history_present",
+            "HGP13.CorePrefixConditions.core_passive_guard"
+          ]
+        },
+        {
+          "status": "kernel_verified",
+          "statement": "For any indexed prefix of a legal compatible realizing word of length at most 18 with two active sources, the exact packed core guard is false. All-sector literals classify the central and carrier indices and exclude fixed controls as clean-delta witnesses. CoreConditions therefore imply either a finished central/carrier row or an untouched carrier with its clean delta available among mutable rows. The same conclusion holds for propose.coreBad after every actual indexed step. Catalogue pruning, all-sector finite exclusion and unconditional minimum remain open.",
+          "declarations": [
+            "HGP13.CoreGuardEncoding.core_literals_checked",
+            "HGP13.CoreGuardEncoding.clean_witness_mutable",
+            "HGP13.CoreGuardEncoding.state_core_false",
+            "HGP13.CoreGuardEncoding.core_guard"
+          ]
+        },
+        {
+          "status": "kernel_verified",
+          "statement": "The repeat-erasure budget is strengthened using the exact fresh-form count, in both orientations: rawExtra + 13 + activeCount + fullAuxiliaryCount <= full word length. Consequently there is an indexed core representation for which, at every prefix, the full-word auxiliary count is at most the exact dynamic capacity 5-activeCount-prefixRawExtra. Membership and distinctness of the concrete enlarged list, literal prefix-table completeness, all-sector certificates and unconditional minimum remain open.",
+          "declarations": [
+            "HGP13.CatalogueCapacity.word_fresh_exact",
+            "HGP13.CatalogueCapacity.covered_aux_budget",
+            "HGP13.CatalogueCapacity.covered_prefix_capacity"
+          ]
+        },
+        {
+          "status": "kernel_verified",
+          "statement": "Raw projected prefix history reflects through erasure into the original full word. Every entry of the exact old auxiliary list, and every entry of the concrete enlarged list including a newly generated form, belongs to the full-word auxiliary set. The enlarged list is duplicate-free. Combining this with the exact prefix capacity proves its size cannot trigger the catalogue rejection along a suitable indexed core of any legal compatible realizing word of length at most 18. The full auxiliary set satisfies the abstract catalogue predicate. The exact proposal catalogue field is identified, but literal prefixAccept completeness remains OPEN, as do all-sector certificates and the unconditional minimum.",
+          "declarations": [
+            "HGP13.CatalogueHistory.full_aux_extras",
+            "HGP13.CatalogueHistory.prefix_seen_in_full",
+            "HGP13.CatalogueHistory.known_aux_in_full",
+            "HGP13.CatalogueHistory.enlarged_nodup",
+            "HGP13.CatalogueHistory.enlarged_subset",
+            "HGP13.CatalogueHistory.enlarged_length",
+            "HGP13.CatalogueHistory.proposal_catalogue",
+            "HGP13.CatalogueHistory.covered_size_bound",
+            "HGP13.CatalogueHistory.full_aux_catalogued"
+          ]
+        },
+        {
+          "status": "kernel_verified",
+          "statement": "For every available and candidate list of seven-bit forms, the complement-based XOR derivability test, ready predicate, greedy build and final acceptance agree exactly with the original catalogue definitions. This supplies a verified equivalent implementation for finite completeness checks; completeness of either literal prefix table remains open.",
+          "declarations": [
+            "HGP13.ComplementCatalogue.derivableAlt_eq",
+            "HGP13.ComplementCatalogue.readyAlt_eq",
+            "HGP13.ComplementCatalogue.buildAlt_eq",
+            "HGP13.ComplementCatalogue.acceptsAlt_eq"
+          ]
+        },
+        {
+          "status": "kernel_verified",
+          "statement": "SharedSearch.encode is invariant under permutations. Any duplicate-free observed list included in a duplicate-free complete triple or quadruple has exactly the same encoded key as one of its 8 or 16 index-selected subsets, including after sorting an arbitrary full list. This closes the symbolic list-order and subset-mask bridge, but the concrete prefix trees are not yet proved to contain every needed key.",
+          "declarations": [
+            "HGP13.SortEncoding.encode_perm",
+            "HGP13.SortEncoding.observed_filter_encode",
+            "HGP13.SortEncoding.filter_three_mask",
+            "HGP13.SortEncoding.filter_four_mask",
+            "HGP13.SortEncoding.observed_three_mask",
+            "HGP13.SortEncoding.observed_four_mask",
+            "HGP13.SortEncoding.observed_length_three_mask",
+            "HGP13.SortEncoding.observed_length_four_mask",
+            "HGP13.SortEncoding.observed_sorted_three_mask",
+            "HGP13.SortEncoding.observed_sorted_four_mask"
+          ]
+        },
+        {
+          "status": "kernel_verified",
+          "statement": "Catalogue acceptance and Catalogued are invariant under a permutation of the candidate list. Sorting the numeric representation of an arbitrary complete catalogue set preserves its abstract validity. Every duplicate-free observed numeric subset of a complete catalogue triple or quadruple has the exact encoded key of one of its 8 or 16 subsets. This composes the abstract catalogue with the symbolic mask bridge but does not prove literal table coverage.",
+          "declarations": [
+            "HGP13.PrefixBridge.accepts_perm_todo",
+            "HGP13.PrefixBridge.catalogued_perm",
+            "HGP13.PrefixBridge.sorted_value_perm",
+            "HGP13.PrefixBridge.sorted_catalogued",
+            "HGP13.PrefixBridge.numeric_full_shape",
+            "HGP13.PrefixBridge.observed_catalogued_three",
+            "HGP13.PrefixBridge.observed_catalogued_four"
+          ]
+        },
+        {
+          "status": "kernel_verified",
+          "statement": "Every valid XOR schedule restricted to goals and auxiliary forms can be reordered into a goal-saturated path whose extra steps are exactly the non-goal steps of the original schedule. Every abstract Catalogued set appears up to permutation in the explicit finite paths generator at its auxiliary count. Conditional lookup theorems reduce literal prefix coverage for triples and quadruples to checks over these generated paths and their 8 or 16 subset keys. The finite checks themselves and the exact concrete pruning guard remain open.",
+          "declarations": [
+            "HGP13.GoalSaturation.validMasks_mono",
+            "HGP13.GoalSaturation.saturation_mono",
+            "HGP13.GoalSaturation.valid_schedule_path",
+            "HGP13.GoalSaturation.fresh_nodup",
+            "HGP13.GoalSaturation.catalogued_extra_path",
+            "HGP13.GoalSaturation.mem_allValues",
+            "HGP13.GoalSaturation.extra_path_mem",
+            "HGP13.GoalSaturation.catalogued_mem_paths",
+            "HGP13.GoalSaturation.catalogued_three_lookup",
+            "HGP13.GoalSaturation.catalogued_four_lookup"
+          ]
+        },
+        {
+          "status": "kernel_verified",
+          "statement": "The canonical states generator sorts the auxiliary forms and deduplicates equal sets at every depth. Saturation and next-step derivability are invariant under permutations, so every abstract Catalogued triple or quadruple remains represented by its canonical set. Conditional lookup theorems reduce literal prefix coverage to finite checks on those canonical states. No practical full-depth kernel check or concrete prefix-table coverage has yet been established.",
+          "declarations": [
+            "HGP13.CanonicalPaths.normalize_perm",
+            "HGP13.CanonicalPaths.normalize_congr",
+            "HGP13.CanonicalPaths.saturation_perm",
+            "HGP13.CanonicalPaths.derivable_perm",
+            "HGP13.CanonicalPaths.normalized_path_mem",
+            "HGP13.CanonicalPaths.catalogued_mem_states",
+            "HGP13.CanonicalPaths.catalogued_three_lookup",
+            "HGP13.CanonicalPaths.catalogued_four_lookup"
+          ]
+        },
+        {
+          "status": "kernel_verified",
+          "statement": "A merge-sort plus adjacent-deduplication generator has exactly the same membership at every depth as the canonical reference generator. Catalogue coverage transfers to it. Boolean checkThree/checkFour inspect all eight/sixteen subset keys for each generated state whose full catalogue is accepted, and proved implication theorems establish lookup for every observed subset if these checks return true. Full-depth finite evaluation and literal prefix-table coverage remain open.",
+          "declarations": [
+            "HGP13.FastCanonicalPaths.mem_dedupAdjacent",
+            "HGP13.FastCanonicalPaths.mem_fastStates_iff",
+            "HGP13.FastCanonicalPaths.catalogued_mem_fastStates",
+            "HGP13.FastCanonicalPaths.catalogued_three_lookup",
+            "HGP13.FastCanonicalPaths.catalogued_four_lookup",
+            "HGP13.FastCanonicalPaths.checkThree_implies_lookup",
+            "HGP13.FastCanonicalPaths.checkFour_implies_lookup"
+          ]
+        },
+        {
+          "status": "kernel_verified",
+          "statement": "An explicit-layer certificate checker is proved sound: if the first layer includes the empty auxiliary set, every eligible normalized successor of every listed state occurs in the next layer, and final catalogue subset keys pass the supplied lookup, then every observed subset of every abstract Catalogued triple or quadruple passes lookup. No concrete large certificate has been accepted, and the list-based membership checker is not yet practical for full layers.",
+          "declarations": [
+            "HGP13.PrefixCertificate.stepOK_member",
+            "HGP13.PrefixCertificate.states_succ_member",
+            "HGP13.PrefixCertificate.states_covered",
+            "HGP13.PrefixCertificate.verifyThree_lookup",
+            "HGP13.PrefixCertificate.verifyFour_lookup"
+          ]
+        },
+        {
+          "status": "kernel_verified",
+          "statement": "A tree-indexed explicit-layer checker refines the proved list certificate checker: successful tree lookup implies membership in the enumerated layer, and successful step checks cover every eligible transition. Consequently accepting a concrete tree certificate would establish prefix lookup for all abstract Catalogued triples or quadruples. A small positive and deletion-negative transition test is kernel-checked. No full target certificate has been generated or accepted.",
+          "declarations": [
+            "HGP13.PrefixTreeCertificate.has_mem",
+            "HGP13.PrefixTreeCertificate.stepOK_of_nodes",
+            "HGP13.PrefixTreeCertificate.stepOK_refines",
+            "HGP13.PrefixTreeCertificate.verifyThree_refines",
+            "HGP13.PrefixTreeCertificate.verifyFour_refines",
+            "HGP13.PrefixTreeCertificate.verifyThree_lookup",
+            "HGP13.PrefixTreeCertificate.verifyFour_lookup",
+            "HGP13.PrefixTreeCertificate.tiny_step_accepted",
+            "HGP13.PrefixTreeCertificate.tiny_deleted_successor_rejected"
+          ]
+        },
+        {
+          "status": "kernel_verified",
+          "statement": "For the transpose goals, an untrusted exporter supplied explicit balanced trees of 1, 39 and 970 canonical auxiliary sets. Lean checks the initial-to-first transition and all 39 first-to-second parent obligations individually, then derives the complete depth-one-to-depth-two step theorem. A required-child deletion is rejected in a separate kernel-checked probe. This is only two layers of the catalogue-prefix certificate, not full triple/quadruple table coverage.",
+          "declarations": [
+            "HGP13.PrefixTreeDepth2.step01",
+            "HGP13.PrefixTreeDepth2.parent0",
+            "HGP13.PrefixTreeDepth2.parent19",
+            "HGP13.PrefixTreeDepth2.layer1_entries",
+            "HGP13.PrefixTreeDepth2.step12",
+            "HGP13.PrefixTreeDepth2Omitted.parent0"
+          ],
+          "evidence": "prefix_certificate/FORMAT.md"
+        },
+        {
+          "status": "kernel_verified",
+          "statement": "For the transpose goals, Lean accepted a 20,125-node candidate third-layer tree and checked the first 25 of 970 second-layer parent obligations against it, combining those 25 results into one Boolean group theorem. The full second-to-third layer step and final triple-prefix lookup coverage remain open. A direct monolithic step check reached the 4 GiB memory limit.",
+          "declarations": [
+            "HGP13.PrefixTreeDepth3Transpose.parent0",
+            "HGP13.PrefixTreeDepth3Transpose.parent24",
+            "HGP13.PrefixTreeDepth3Transpose.group00_all"
+          ],
+          "evidence": "prefix_certificate/FORMAT.md"
+        },
+        {
+          "status": "kernel_verified",
+          "statement": "A generic checker validates explicit paths to nodes in a candidate prefix tree and proves that an accepted node or full-layer path certificate implies membership and the reference PrefixCertificate.stepOK condition. A 25-parent path pilot is kernel-checked, but took 71 seconds versus 70 seconds for the direct Boolean check and emitted 155 KB of path literals; it is not yet a practical compact certificate for the remaining layers.",
+          "declarations": [
+            "HGP13.PrefixPathWitness.verify_mem",
+            "HGP13.PrefixPathWitness.checkOptions_sound",
+            "HGP13.PrefixPathWitness.checkNode_sound",
+            "HGP13.PrefixPathWitness.checkLayer_sound",
+            "HGP13.PrefixPathProbe.checked0",
+            "HGP13.PrefixPathProbe.checked24"
+          ],
+          "evidence": "prefix_certificate/DEPTH3_BENCHMARK.md"
+        },
+        {
+          "status": "kernel_verified",
+          "statement": "A packed fourth-layer tree stores one 128-bit child mask per three-form prefix. Successful mask lookup implies membership in the explicitly defined four-form layer. A per-node final-key check is equivalent to the reference finalFourOK condition without constructing the full flattened layer, and the hybrid verifier refines the proved list certificate checker. Its acceptance would imply prefix lookup for every observed subset of a Catalogued quadruple. Small hit/miss controls are kernel-checked; no full packed certificate is yet accepted.",
+          "declarations": [
+            "HGP13.PrefixPackedFourth.bit_child_mem",
+            "HGP13.PrefixPackedFourth.lookup_mem",
+            "HGP13.PrefixPackedFourth.has_mem",
+            "HGP13.PrefixPackedFourth.stepOK_of_nodes",
+            "HGP13.PrefixPackedFourth.stepOK_refines",
+            "HGP13.PrefixPackedFourth.finalTreeOK_iff",
+            "HGP13.PrefixPackedFourth.verifyFour_refines",
+            "HGP13.PrefixPackedFourth.verifyFour_lookup",
+            "HGP13.PrefixPackedFourth.tiny_mask_hit",
+            "HGP13.PrefixPackedFourth.tiny_mask_miss"
+          ]
+        },
+        {
+          "status": "kernel_verified",
+          "statement": "For one real transpose fourth-layer prefix (3,5,12), Lean checks the packed mask of 55 candidate fourth forms against the concrete SectorGraph359.prefix4 lookup. Removing required key zero makes this node check false. A separate 53,801-node packed fourth-layer pilot verified one real parent transition under a 4 GiB limit; neither pilot proves all final nodes, all layer transitions, or full prefix-table coverage.",
+          "declarations": [
+            "HGP13.PackedFourthFinalNode.final_hit",
+            "HGP13.PackedFourthFinalNode.deleted_zero_rejected"
+          ],
+          "evidence": "prefix_certificate/PackedFourthFinalNode_transpose.lean"
+        },
+        {
+          "status": "kernel_verified",
+          "statement": "For any retained coordinate embedding of width n, a finite 2-bit weight table checked on all 2^n packed XOR inputs is a valid dual lower-bound potential for the original 13-bit row problem. It bounds each passive target cost and the total terminal completion cost. This generic result supports exact eight-bit histories in sector 234 but does not yet certify any of its 16 terminal histories or full graph.",
+          "declarations": [
+            "HGP13.FullPackedPotential.packed_valid",
+            "HGP13.FullPackedPotential.valid_of_check",
+            "HGP13.FullPackedPotential.excludes_completion"
+          ]
+        },
+        {
+          "status": "kernel_verified",
+          "statement": "Sector 234 is the original-orientation sector with active sources [0,2] and relay [10]. Its eight-bit packed row representation is an exact inverse on every supported full row. In particular, form 249 differs from form 121, so truncating histories to seven bits is invalid. This does not yet establish correspondence between the graph transitions and every legal full CNOT word.",
+          "declarations": [
+            "HGP13.Sector234Encoding.sector_at_234",
+            "HGP13.Sector234Encoding.lift_supported",
+            "HGP13.Sector234Encoding.lift_pack",
+            "HGP13.Sector234Encoding.unpack_actual",
+            "HGP13.Sector234Encoding.high_form_249_keeps_carrier_bit"
+          ]
+        },
+        {
+          "status": "kernel_verified",
+          "statement": "An ideal prefix lookup is defined by existence of a subset of an abstract Catalogued triple or quadruple. Lean proves exact equivalence between PrefixComplete and coverage of its keys by any concrete lookup. A specific original-orientation Catalogued triple [9,11,22] has encoded key 148886 in the actual original prefix-3 table; deleting that key makes PrefixComplete false. This is a real negative control, not a positive proof that either concrete table covers every required key.",
+          "declarations": [
+            "HGP13.IdealPrefixLookup.ideal_prefix_complete",
+            "HGP13.IdealPrefixLookup.prefix_complete_of_covers_ideal",
+            "HGP13.IdealPrefixLookup.covers_ideal_of_prefix_complete",
+            "HGP13.IdealPrefixLookup.prefix_complete_iff_covers_ideal",
+            "HGP13.IdealPrefixLookup.not_prefix_complete_of_missing_ideal",
+            "HGP13.PrefixDeletionControl.triple_catalogued",
+            "HGP13.PrefixDeletionControl.original_accepts_key",
+            "HGP13.PrefixDeletionControl.key_is_ideal",
+            "HGP13.PrefixDeletionControl.deletion_breaks_completeness"
+          ]
+        },
+        {
+          "status": "kernel_verified",
+          "statement": "For any covered legal full realization of length <=18, one and the same indexed core word has all seven SharedSearch proposal guards false at every prefix, conditional only on exact concrete prefix-lookup completeness. Lean composes the guards into a Path from the exact initial state, proves core depth <=12+q, terminal, and exact equality between packed history bits and full retained history rows. Three accepted checks per orientation imply lookup completeness, but those six concrete large checks remain open; this is not an unconditional minimum theorem.",
+          "declarations": [
+            "HGP13.FullWordPath.full_aux_ge_three",
+            "HGP13.FullWordPath.selected_extra_guard",
+            "HGP13.FullWordPath.selected_catalogue_guard",
+            "HGP13.FullWordPath.selected_admissible_step",
+            "HGP13.FullWordPath.selected_guards",
+            "HGP13.FullWordPath.short_word_accepted_path",
+            "HGP13.FullWordPath.selected_history_exact",
+            "HGP13.FullWordPathCertificates.prefix_complete_of_three_checks",
+            "HGP13.FullWordPathCertificates.short_word_accepted_path_of_certificates"
+          ]
+        },
+        {
+          "status": "kernel_verified",
+          "statement": "A checked full packed terminal potential bounds passive contributions of an actual 13-wire CNOT word directly. For sectors 234 and 359, every retained full historical row belongs to the decoded eight-bit or seven-bit terminal history respectively, which therefore covers all control contributions in the oriented word. This closes the full-row terminal-cost transfer for those sectors; it does not certify concrete prefix lookup completeness.",
+          "declarations": [
+            "HGP13.FullPackedCompletion.excludes_full_program",
+            "HGP13.Sector234FullCompletion.history_mem_decode",
+            "HGP13.Sector234FullCompletion.selected_decode_covers",
+            "HGP13.Sector359FullCompletion.history_mem_decode",
+            "HGP13.Sector359FullCompletion.selected_decode_covers"
+          ]
+        },
+        {
+          "status": "kernel_verified",
+          "statement": "For every indexed sector path, the abstract SharedSearch history bit for a supported packed row is set exactly when the corresponding full 13-bit row occurred in the complete retained history. This is independent of an underlying realizing word. Combined with the packed-cost and set-invariance theorems, the abstract terminal history has exact mathematical semantics; the imperative C++ representation remains externally audited.",
+          "declarations": [
+            "HGP13.IndexedHistoryBits.indexed_history_bit_iff"
+          ]
+        },
+        {
+          "status": "kernel_verified",
+          "statement": "For every depth-dependent SharedSearch configuration, the deduplicated breadth-first layer contains exactly the reachable complete states at that depth. Every accepted TransitionChecks.Path reaches a state in the corresponding layer. This proves abstract layer completeness and safe merging of equal full states; it does not prove the C++ unordered_set implementation or finite exclusion for the 363 concrete sectors.",
+          "declarations": [
+            "HGP13.DepthFrontier.mem_frontier_succ",
+            "HGP13.DepthFrontier.reach_iff_frontier",
+            "HGP13.DepthFrontier.reach_prepend",
+            "HGP13.DepthFrontier.path_reach",
+            "HGP13.DepthFrontier.path_mem_frontier"
+          ]
+        },
+        {
+          "status": "kernel_verified",
+          "statement": "For every indexed sector path, the exact full-row passive cost equals the cost of decoding supported rows from the terminal state's history bits. Every accepted path appears in its deduplicated abstract BFS layer; consequently a finite state-and-depth exclusion premise implies the previous path-quantified NoCheapTerminal premise. This is a mathematical bridge, not verification of the C++ bitset or log.",
+          "declarations": [
+            "HGP13.StateHistoryCost.mem_allRows",
+            "HGP13.StateHistoryCost.mem_decode_iff",
+            "HGP13.StateHistoryCost.indexed_cost_eq_decoded",
+            "HGP13.FiniteFrontierBoundary.no_cheap_terminal_of_frontier"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "source.12.2",
+      "status": "open",
+      "statement": "Concrete kernel-checked exclusion certificates for all reduced sectors.",
+      "source_locator": "Lemma 12.2",
+      "declarations": [],
+      "external_evidence": "evidence/full_provenance_2026-09-27/audit.json",
+      "external_evidence_scope": "A source/binary-bound repeat of the same C++ verifier matches all 363 preserved case records; this does not close the kernel claim or formally refine C++ to Lean.",
+      "partial_results": [
+        {
+          "status": "kernel_verified",
+          "statement": "For the independently specified finite transition graph of sector 284 (transpose, active sources [2,3], relay [5]), no terminal is reachable within 13 transitions. All successors are checked, including the empty final layer. The supplied catalogue prefix tree and pruning semantics have not yet been proved complete for arbitrary full CNOT words. This pilot does not close either parent claim.",
+          "declarations": [
+            "HGP13.SectorPilot284.safe_reach",
+            "HGP13.SectorPilot284.initial_safe",
+            "HGP13.SectorPilot284.no_terminal"
+          ],
+          "evidence": "evidence/sector-pilot284.json"
+        },
+        {
+          "status": "kernel_verified",
+          "statement": "For each of 36 explicit histories exported at a terminal of sector 359, a 256-bit potential is checked on all seven-bit arguments and all listed historical forms. Its six passive target bounds plus the listed core depth exceed 18. The generic potential theorem proves this bound for any exact costs of those lifted full-row histories. This certifies only the listed terminal costs, not reachability coverage, completeness of the history list, or correspondence to all full words.",
+          "declarations": [
+            "HGP13.PackedTerminalPotential.valid_of_check",
+            "HGP13.PackedTerminalPotential.excludes_completion",
+            "HGP13.SectorTerminal359.excludes0",
+            "HGP13.SectorTerminal359.excludes1",
+            "HGP13.SectorTerminal359.excludes2",
+            "HGP13.SectorTerminal359.excludes3",
+            "HGP13.SectorTerminal359.excludes4",
+            "HGP13.SectorTerminal359.excludes5",
+            "HGP13.SectorTerminal359.excludes6",
+            "HGP13.SectorTerminal359.excludes7",
+            "HGP13.SectorTerminal359.excludes8",
+            "HGP13.SectorTerminal359.excludes9",
+            "HGP13.SectorTerminal359.excludes10",
+            "HGP13.SectorTerminal359.excludes11",
+            "HGP13.SectorTerminal359.excludes12",
+            "HGP13.SectorTerminal359.excludes13",
+            "HGP13.SectorTerminal359.excludes14",
+            "HGP13.SectorTerminal359.excludes15",
+            "HGP13.SectorTerminal359.excludes16",
+            "HGP13.SectorTerminal359.excludes17",
+            "HGP13.SectorTerminal359.excludes18",
+            "HGP13.SectorTerminal359.excludes19",
+            "HGP13.SectorTerminal359.excludes20",
+            "HGP13.SectorTerminal359.excludes21",
+            "HGP13.SectorTerminal359.excludes22",
+            "HGP13.SectorTerminal359.excludes23",
+            "HGP13.SectorTerminal359.excludes24",
+            "HGP13.SectorTerminal359.excludes25",
+            "HGP13.SectorTerminal359.excludes26",
+            "HGP13.SectorTerminal359.excludes27",
+            "HGP13.SectorTerminal359.excludes28",
+            "HGP13.SectorTerminal359.excludes29",
+            "HGP13.SectorTerminal359.excludes30",
+            "HGP13.SectorTerminal359.excludes31",
+            "HGP13.SectorTerminal359.excludes32",
+            "HGP13.SectorTerminal359.excludes33",
+            "HGP13.SectorTerminal359.excludes34",
+            "HGP13.SectorTerminal359.excludes35"
+          ]
+        },
+        {
+          "status": "kernel_verified",
+          "statement": "For each of 16 explicit eight-bit histories exported at a terminal of sector 234, a packed potential table is checked against all 256 XOR inputs and every listed form. Five passive target bounds plus the stated core depth exceed 18. These conditional cost theorems do not establish that the histories exhaust the reachable terminal states or that the candidate transition graph covers every full CNOT word.",
+          "declarations": [
+            "HGP13.Sector234Potentials.excludes0",
+            "HGP13.Sector234Potentials.excludes1",
+            "HGP13.Sector234Potentials.excludes2",
+            "HGP13.Sector234Potentials.excludes3",
+            "HGP13.Sector234Potentials.excludes4",
+            "HGP13.Sector234Potentials.excludes5",
+            "HGP13.Sector234Potentials.excludes6",
+            "HGP13.Sector234Potentials.excludes7",
+            "HGP13.Sector234Potentials.excludes8",
+            "HGP13.Sector234Potentials.excludes9",
+            "HGP13.Sector234Potentials.excludes10",
+            "HGP13.Sector234Potentials.excludes11",
+            "HGP13.Sector234Potentials.excludes12",
+            "HGP13.Sector234Potentials.excludes13",
+            "HGP13.Sector234Potentials.excludes14",
+            "HGP13.Sector234Potentials.excludes15"
+          ],
+          "evidence": "evidence/sector234-terminal-costs.json"
+        },
+        {
+          "status": "kernel_verified",
+          "statement": "The 6668-state sector-234 candidate graph is checked layer by layer against SharedSearch.next, including all 14098 listed edges and empty final continuation. Every terminal reachable from its exact initial state in at most 13 core steps has one of 16 listed depth/history keys; exact 8-bit decoding links each key to a checked passive-cost potential and excludes total cost <=18 conditionally on exact passive costs. This is a complete certificate for this concrete candidate graph only. The full-word-to-SharedSearch path and concrete prefix-table completeness remain open.",
+          "declarations": [
+            "HGP13.SectorGraph234.reachable_terminal_key",
+            "HGP13.SectorCost234.key_cost",
+            "HGP13.SectorCost234.no_cheap_terminal",
+            "HGP13.Sector234Agreement.config_agrees",
+            "HGP13.Sector234Agreement.passive_targets_agree"
+          ],
+          "evidence": "sector234/README.md"
+        },
+        {
+          "status": "kernel_verified",
+          "statement": "For sector 234, any legal full 13-wire realization of length at most 18 compatible with this sector is impossible if the concrete sector lookup is prefix-complete. A single selected core path is converted to the checked graph, and exact passive costs are derived from the actual word and decoded full-row history, not assumed. The concrete lookup-completeness premise remains open, as do the other sectors.",
+          "declarations": [
+            "HGP13.Sector234FullCompletion.path_reach",
+            "HGP13.Sector234FullCompletion.no_short_full_word_from_costs",
+            "HGP13.Sector234FullCompletion.sector_mem",
+            "HGP13.Sector234FullCompletion.no_short_sector234"
+          ]
+        },
+        {
+          "status": "kernel_verified",
+          "statement": "The same full-word-to-graph-to-cost composition excludes every legal full 13-wire realization of length at most 18 compatible with sector 359, conditional on completeness of that sector concrete prefix lookup. Its seven-bit history is exact for the retained rows, and exact passive costs follow from actual word contributions. The prefix-completeness premise and the other sectors remain open.",
+          "declarations": [
+            "HGP13.Sector359Agreement.config_agrees",
+            "HGP13.Sector359Agreement.passive_targets_agree",
+            "HGP13.Sector359FullCompletion.path_reach",
+            "HGP13.Sector359FullCompletion.no_short_full_word_from_costs",
+            "HGP13.Sector359FullCompletion.sector_mem",
+            "HGP13.Sector359FullCompletion.no_short_sector359"
+          ]
+        },
+        {
+          "status": "kernel_verified",
+          "statement": "For sector 359, every path of length at most 12 from the shared search initial state reaches a terminal only at one of 36 certified depth/history keys. All successors are checked directly through SharedSearch.next using the explicit catalogue lookup. Decoding those histories and composing their potential certificates proves every such terminal has total core-plus-passive cost greater than 18. The certificate covers the specified shared finite graph, not yet every original full CNOT word: concrete catalogue completeness and pruning/full-word correspondence remain open.",
+          "declarations": [
+            "HGP13.SectorGraph359.initial_eq",
+            "HGP13.SectorGraph359.initial_safe",
+            "HGP13.SectorGraph359.reachable_terminal_key",
+            "HGP13.SectorCost359.key_cost",
+            "HGP13.SectorCost359.no_cheap_terminal"
+          ],
+          "evidence": "evidence/sector-graph359.json"
+        }
+      ]
+    },
+    {
+      "id": "main.minimum19",
+      "status": "open",
+      "statement": "HGP13.ExactMinimum HGP13.target 19 without an open hypothesis.",
+      "source_locator": null,
+      "declarations": [],
+      "external_evidence": "evidence/full_provenance_2026-09-27/audit.json",
+      "external_evidence_scope": "A fresh complete run supports the explicitly conditional finite premise but is not an unconditional Lean proof.",
+      "partial_results": [
+        {
+          "status": "kernel_verified",
+          "statement": "For arbitrary covered sector and its lookup, Lean proves that an accepted short full word has exact passive-history cost bounded by the full program length. Consequently the 19-CNOT minimum follows from two explicit finite premises for every sector: complete prefix lookup and absence of a terminal with state-decoded core-plus-passive cost at most 18 in every abstract BFS layer. ConcreteFiniteBoundary fixes the literal original and transpose tables in this conditional theorem. No claim that the C++ log formally proves those premises is made; NoShortProgram without a premise remains open.",
+          "declarations": [
+            "HGP13.AbstractFiniteExclusion.no_short_in_sector",
+            "HGP13.AbstractFiniteExclusion.no_short_of_finite_facts",
+            "HGP13.AbstractFiniteExclusion.exact_minimum_of_finite_facts",
+            "HGP13.ConcreteFiniteBoundary.exact_minimum_of_external_finite_result"
+          ]
+        }
+      ]
+    }
+  ]
+}

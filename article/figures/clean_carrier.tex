@@ -1,0 +1,19 @@
+\begin{tikzpicture}[font=\sffamily]
+  \node[proof title] at (8,5.45) {Zero slack: a repeated nonbasis projection can only make a first copy};
+  \node[proof box,text width=3cm,minimum height=1.05cm] (control) at (2.2,3.8)
+    {control row\\$(\phi,\mu)$};
+  \node[font=\sffamily\Huge,text=proofnavy] at (4.65,3.8) {$+$};
+  \node[proof box,text width=3.6cm,minimum height=1.05cm] (fresh) at (7,3.8)
+    {uninitialized output $j$\\$(0,e_j)$};
+  \node[proof box,text width=3.6cm,minimum height=1.05cm] (after) at (13.25,3.8)
+    {after the copy\\$(\phi,\mu+e_j)$};
+  \draw[proof arrow] (fresh) -- (after);
+  \node[font=\sffamily\small,text=proofnavy] at (8,2.75)
+    {The private unit bit $e_j$ is fresh: it occurs on no other row before initialization.};
+  \node[proof orange,text width=5.7cm,minimum height=1.05cm] at (4.4,1.55)
+    {A dirty $\phi$ cannot become clean by copying the same projection.};
+  \node[proof green,text width=5.7cm,minimum height=1.05cm] at (11.6,1.55)
+    {A lost clean nonbasis $\phi$ cannot be recreated when $\rho=0$.};
+  \node[proof note] at (8,.35)
+    {Private coefficients are tracked throughout; no input is prepared as zero.};
+\end{tikzpicture}

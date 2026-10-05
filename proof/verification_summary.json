@@ -1,0 +1,10 @@
+{
+  "source_sha256": "2174f445df534455c30e9ae7b54b8dfff4fdbdce3ff4eaf6b7d7e557fa3f8e4c",
+  "compiler": "g++ 11.4.0, -O3 -std=c++17 -pthread",
+  "environment": "existing cnot-beam-torch:cu128 Docker image, network disabled",
+  "case_count": 363,
+  "total_labels": 306922994,
+  "all_cases_zero_support": true,
+  "all_case_records_equal_pdf_log": true,
+  "verification_scope": "Fresh execution of supplied implementation; not an independently written solver"
+}

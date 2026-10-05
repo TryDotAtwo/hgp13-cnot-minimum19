@@ -1,0 +1,15 @@
+{
+  "status": "PASS: xor_cost equals BFS oracle on 1518 deterministic histories",
+  "pinned_source_sha256": "2174f445df534455c30e9ae7b54b8dfff4fdbdce3ff4eaf6b7d7e557fa3f8e4c",
+  "harness_sha256": "c13b1f75ae99b398d587337bf4527f62afe068196bfc54d2a6a3b24887703e70",
+  "output_sha256": "b24864222991efbba5bf5c1bdbbe8929de38a5a707fbe37cfaef477dc9d13153",
+  "compiler": "g++ 11.4.0 -O2 -std=c++17 -pthread",
+  "dimensions": [
+    7,
+    8,
+    9
+  ],
+  "histories": 1518,
+  "checked_cells": 453376,
+  "scope": "bounded differential test; not a formal proof of the C++ loop"
+}

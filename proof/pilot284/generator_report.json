@@ -1,0 +1,18 @@
+{
+  "sector": 284,
+  "layers": [
+    1,
+    16,
+    117,
+    286,
+    495,
+    330,
+    79,
+    6
+  ],
+  "states": 1330,
+  "edges": 2604,
+  "prefixes": 524,
+  "source_bytes": 588871,
+  "full_word_correspondence_proved": false
+}

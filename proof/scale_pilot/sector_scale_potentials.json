@@ -1,0 +1,33 @@
+{
+  "0": {
+    "source_sha256": "c8fd4a678d95280b66bd515c856425d49f20a5d7185c91d53d173f325e91c5f4",
+    "source_bytes": 991,
+    "width": 9,
+    "history_forms": 17,
+    "weight_table_bits": 1024,
+    "target_weights": [
+      2,
+      2,
+      2,
+      3
+    ],
+    "verified_lower_bound_candidate": 19,
+    "actual_cost_from_python": 19
+  },
+  "315": {
+    "source_sha256": "c1198b838451dda3c1f7bafa83c04eaf9a482030cc08add85ec54d2eb2917f06",
+    "source_bytes": 820,
+    "width": 8,
+    "history_forms": 13,
+    "weight_table_bits": 512,
+    "target_weights": [
+      3,
+      2,
+      2,
+      3,
+      3
+    ],
+    "verified_lower_bound_candidate": 19,
+    "actual_cost_from_python": 20
+  }
+}

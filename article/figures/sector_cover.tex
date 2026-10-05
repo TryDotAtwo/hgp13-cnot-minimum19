@@ -1,0 +1,33 @@
+\begin{tikzpicture}[font=\sffamily]
+  \node[proof title] at (8,7.65) {Coverage of all activity pairs allowed by $L\le18$};
+  \node[font=\sffamily\bfseries,text=proofnavy] at (6,6.9) {number $v$ of controlling private outputs};
+  \foreach \j in {0,1,2} \node[text=proofnavy,font=\bfseries] at ({3+3*\j},6.35) {$v=\j$};
+  \node[font=\sffamily\bfseries,text=proofnavy,rotate=90] at (-.25,3.65) {number $u$ of targeted sources};
+  \node[text=proofnavy,font=\bfseries,anchor=east] at (1.7,5.35) {$u=0$};
+  \node[text=proofnavy,font=\bfseries,anchor=east] at (1.7,3.15) {$u=1$};
+  \node[text=proofnavy,font=\bfseries,anchor=east] at (1.7,.85) {$u=2$};
+  \node[proof orange,text width=2.05cm,minimum height=1.05cm,font=\sffamily\small\bfseries] at (3,5.35)
+    {analytic\\$L\ge20$};
+  \node[proof green,text width=2.05cm,minimum height=1.05cm,font=\sffamily\small] at (6,5.35)
+    {transpose\\one source, no output};
+  \node[proof green,text width=2.05cm,minimum height=1.05cm,font=\sffamily\small] at (9,5.35)
+    {transpose\\two sources, one output};
+  \node[proof box,text width=2.05cm,minimum height=1.05cm,font=\sffamily\small] at (3,3.15)
+    {original\\one source, no output};
+  \node[proof box,text width=2.05cm,minimum height=1.05cm,font=\sffamily\small] at (6,3.15)
+    {original\\one source, one output};
+  \node[proof green,text width=2.05cm,minimum height=1.05cm,font=\sffamily\small] at (9,3.15)
+    {transpose\\two sources, one output};
+  \foreach \x in {3,6,9}
+    \node[proof box,text width=2.05cm,minimum height=1.05cm,font=\sffamily\small] at (\x,.85)
+      {original\\two sources, up to two outputs};
+  \node[proof gray,text width=4.1cm,minimum height=4.75cm,anchor=north] at (13.35,6.12)
+    {\textbf{Sector-family sizes}\\[8pt]
+     two sources, two outputs: $225$\\[5pt]
+     transposed two/one: $90$\\[5pt]
+     one source, one output: $36$\\[5pt]
+     one source, no output: $12$\\[9pt]
+     \textbf{total: $363$}};
+  \node[proof note] at (7.4,-.55)
+    {Transposed families cover the symmetric activity pairs without duplicating the search logic.};
+\end{tikzpicture}

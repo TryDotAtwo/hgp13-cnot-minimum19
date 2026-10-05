@@ -1,0 +1,22 @@
+{
+  "sector-scale-feasibility-2026-09-27.md": "29f6abfb8c7c4764a4b2a677062943d1aae0652770590477c06f7fcac0a0fba0",
+  "generate_sector_scale_samples.py": "afd8033d947d8fe5709d9d23ca2281407dd59711ee39e3172c5d4505b714e89d",
+  "sector_scale_samples.cpp": "58b3608a407c14a9e13c3fb4fe4015b0ea5cb127d7fb9002dd9bac9596efeb25",
+  "sector_scale_0.log": "b405bc54702a8852bfcb70450773351635244e94b4612cef7d6c304361146e8b",
+  "sector_scale_315.log": "d523e065c68bb5ed190a4250e6584e883974fd6591f7462f987e0800f8780487",
+  "sector_scale_samples.json": "c3f0bb08a956cba6b0ee88f4e456290695b5cc71a38a2bd549c2e1f557b6701f",
+  "generate_sector_scale_lean_probe.py": "257afac1a13ed886718be6d3b7582bdf589c29c1b2786e554bf53055fa2f4aaa",
+  "generate_sector_scale_potential_probe.py": "bae0c413ae43dce2ff9c5adb1483cbedc1eeecb76a0f9fa94187911e450d7579",
+  "sector_scale_potentials.json": "a694edd77abedf23cfb1e4618e885271a03fe3537ddc44f2889ae21140b7e978",
+  "generate_original_prefixes_lite.py": "d164c7eea12116baedede0529f41ba9d833207b8056b7f1b6b0db038483f2bde",
+  "catalogue_keys.txt": "1ab90d4d09b35f4ec5c7cf30bff692718ba90e807039e05c1885b5da50ad25c3",
+  "OriginalPrefixes.lean": "6c5e2005dfb187758a306ae945fb0dfbae3138278a66026e665b586033889008",
+  "PrefixKeyTree.lean": "2ecaf39036c760c35cf3dd2cc802981bbe37f473c84e954c060601726bfa6085",
+  "OriginalPrefixesLite.lean": "a0052b4be4f69d58bdd5fbeb964cc9405e3e4a97984ba40eafa1338646914394",
+  "SectorScaleProbe0Lite.lean": "92f9b6129e084e5b6396439602214499498ce3c6797a6cce67c71b30bc716a90",
+  "SectorScaleProbe315Lite.lean": "ab8bd0c685dfcbfdd04d231468241311e254b4fd0bf8af0d14c5dcc6ede0851a",
+  "SectorScaleImportOnlyLite.lean": "4e6113a57a95afa7f1bfa3ae86dec7c78612e32595d749ef8a8873916146c08c",
+  "SectorScalePotential0.lean": "d2cd3c37a6e66a8aaf6aba867a2bc453551ce4d2e46fa53e536a40878d5c21bc",
+  "SectorScalePotential315.lean": "234e64122b5a86eebd518b2559336d203cab63286d20d86bdb6af821d82fc338",
+  "PrefixDeletionControlLite.lean": "505e5723cbcd35458f665892890f0fe078eae1fe7ac922c6677275f71d073ec8"
+}

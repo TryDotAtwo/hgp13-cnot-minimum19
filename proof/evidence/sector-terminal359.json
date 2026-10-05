@@ -1,0 +1,31 @@
+{
+  "scope": "36 explicit terminal-cost histories only; graph coverage and full-word correspondence remain open",
+  "sector": 359,
+  "terminals": 36,
+  "format": "128 two-bit weights in one 256-bit natural number",
+  "unrestricted_python_minimum": 20,
+  "certified_clipped_bound": "strictly greater than 18",
+  "standalone_check": {
+    "exit_code": 0,
+    "command": "lake env lean /repo/work/sector-pilot/PackedTerminal359.lean"
+  },
+  "negative_check": {
+    "exit_code": 1,
+    "mutation": "Change table0 weight at zero from 0 to 1",
+    "diagnostic": "decide proved check history0 table0 = true is false"
+  },
+  "array_experiment": {
+    "status": "stopped after compact format passed",
+    "observed_elapsed_seconds": 361,
+    "observed_cpu_seconds": 1685,
+    "observed_rss_kib": 965980,
+    "limitation": "Not a controlled runtime benchmark; concurrent Lean checks were active"
+  },
+  "hashes": {
+    "lean\\PackedTerminalPotential.lean": "b53f7336f1a6daed66e55bff41740b91734d2a1196f07e274612da375ef707ee",
+    "lean\\SectorTerminal359.lean": "da20cb7e191abfece211dc69445848cdf727daddd7e3533e46629fe33923076a",
+    "pilot359\\potential359.json": "8e111a91363917bc9236c419c39d38988c10ae5e45dd6628f59a2ea1f963fc79",
+    "pilot359\\exported359.txt": "522fdf38d4b3c7464346639167c51b3cb5b685ec81b463b61e694f582a2a1d0b",
+    "pilot359\\generate.py": "440ea49eaf754cbdab7ed991c38b5edb2287c2e2ba0bfda08af86bd04e23425b"
+  }
+}

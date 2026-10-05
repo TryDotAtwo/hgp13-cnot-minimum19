@@ -1,0 +1,18 @@
+\begin{tikzpicture}[font=\sffamily]
+  \node[proof title] at (8,7.05) {Evidence layers and the current formalization boundary};
+  \node[proof box,text width=4.2cm,minimum height=2.35cm,font=\sffamily\small\bfseries] (paper) at (2.7,5)
+    {MATHEMATICAL MANUSCRIPT\\[5pt]\normalfont structural lemmas\\coverage of the reduced search\\passive-target optimum};
+  \node[proof green,text width=4.2cm,minimum height=2.35cm,font=\sffamily\small\bfseries] (cpp) at (8,5)
+    {C++ EXCLUSION\\[5pt]\normalfont regenerate catalogues\\search all 363 sectors\\best terminal cost exceeds 18};
+  \node[proof gray,text width=4.2cm,minimum height=2.35cm,font=\sffamily\small\bfseries] (lean) at (13.3,5)
+    {LEAN TODAY\\[5pt]\normalfont reduction and search\\exact passive costs\\minimum from finite facts};
+  \node[proof green,text width=7cm,minimum height=1.15cm,font=\sffamily\bfseries] (result) at (5.1,2.1)
+    {manuscript argument + exhaustive C++ run\\$\Longrightarrow\ \cost(M)=19$};
+  \node[proof orange,text width=4.8cm,minimum height=1.45cm,font=\sffamily\bfseries] (open) at (12.6,2.1)
+    {External finite facts:\\complete catalogues\\all terminal costs $>18$};
+  \draw[proof green arrow] (paper) -- (result);
+  \draw[proof green arrow] (cpp) -- (result);
+  \draw[proof orange arrow,dashed] (open.north) -- (lean.south);
+  \node[proof note] at (8,.45)
+    {General theory is kernel-checked; finite execution and C++ correspondence remain external.};
+\end{tikzpicture}

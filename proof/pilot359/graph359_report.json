@@ -1,0 +1,10 @@
+{
+  "states": 2208,
+  "edges": 3179,
+  "prefixes": {
+    "3": 524,
+    "4": 40208
+  },
+  "terminals": 36,
+  "full_word_correspondence_proved": false
+}

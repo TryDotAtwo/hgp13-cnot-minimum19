@@ -1,0 +1,16 @@
+\begin{tikzpicture}[font=\sffamily]
+  \node[proof title] at (8,5.15) {Every gate creates a new projection or repeats an old one};
+  \node[font=\sffamily\bfseries,text=proofblue] at (3.35,4.35) {FIRST APPEARANCES};
+  \node[font=\sffamily\bfseries,text=proofgreen] at (11.55,4.35) {REPEATED RESULTS};
+  \node[proof box,text width=2.3cm,minimum height=.9cm] at (1.8,3.35) {7 target forms};
+  \node[proof box,text width=2cm,minimum height=.9cm] at (4.65,3.35) {$h$ auxiliaries};
+  \node[proof green,text width=2.4cm,minimum height=.9cm] at (8.05,3.35) {6 first copies};
+  \node[proof green,text width=1.75cm,minimum height=.9cm] at (11.05,3.35) {$u$ returns};
+  \node[proof gray,text width=1.75cm,minimum height=.9cm] at (13.85,3.35) {$\rho$ others};
+  \node[font=\sffamily\Large\bfseries,text=proofnavy] at (8,2.15)
+    {$L=7+h+6+u+\rho=13+h+u+\rho$, \quad $h\ge3$, $\rho\ge0$};
+  \node[font=\sffamily\bfseries,text=proofnavy] at (8,1.15)
+    {If $L\le18$ and $u=2$, then $L=18$, $h=3$, and $\rho=0$.};
+  \node[proof note] at (8,.35)
+    {Transposition gives a separate copy of the same bound with $v$ in place of $u$.};
+\end{tikzpicture}

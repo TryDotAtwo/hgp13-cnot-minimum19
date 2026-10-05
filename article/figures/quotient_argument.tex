@@ -1,0 +1,30 @@
+\begin{tikzpicture}[font=\sffamily]
+  \node[proof title] at (8,7.35) {The quotient-space obstruction behind $\alpha(F\mid P)=10$};
+  \node[font=\sffamily\bfseries,text=proofnavy] at (4.2,6.45)
+    {Outside $H=\operatorname{span}(r_0,r_1,r_2)$};
+  \node[proof box,text width=6.7cm,minimum height=.8cm] at (4.2,5.7)
+    {The nine forms in $(P\cup F)\setminus H$ lie in nine distinct nonzero cosets.};
+  \foreach \lab/\x/\y in {$a$/1.1/4.65,$b$/2.15/4.65,$c$/3.2/4.65,$t$/4.25/4.65,$d$/5.3/4.65,$e$/6.35/4.65,$f$/7.4/4.65,$q_0$/2.65/4.0,$q_1$/5.85/4.0}
+    \node[draw=proofgrid,fill=white,rounded corners=1pt,minimum width=.8cm,minimum height=.55cm,text=proofnavy] at (\x,\y) {\lab};
+  \node[proof orange,text width=5.3cm,minimum height=.95cm] at (4.2,2.7)
+    {To obtain a new element of $H$, two available outside forms must first occupy the same coset.};
+  \node[font=\sffamily\bfseries,text=proofnavy] at (12,6.45) {Directions created inside $H$};
+  \node[proof gray,text width=1.6cm] (w0) at (9,4.9) {$\dim W=0$};
+  \node[proof box,text width=1cm] (a1) at (11.55,4.9) {$+b_1$};
+  \node[proof green,text width=1.6cm] (w1) at (14.1,4.9) {$\dim W\le1$};
+  \node[proof box,text width=1cm] (a2) at (11.55,3.55) {$+b_2$};
+  \node[proof green,text width=1.6cm] (w2) at (14.1,3.55) {$\dim W\le2$};
+  \node[proof box,text width=1cm] (a3) at (11.55,2.2) {$+b_3$};
+  \node[proof green,text width=1.6cm] (w3) at (14.1,2.2) {$\dim W\le3$};
+  \draw[proof arrow] (w0.east) -- (a1.west);
+  \draw[proof arrow] (a1.east) -- (w1.west);
+  \draw[proof arrow] (w1.south) -- ++(0,-.28) -| (a2.east);
+  \draw[proof arrow] (a2.east) -- (w2.west);
+  \draw[proof arrow] (w2.south) -- ++(0,-.28) -| (a3.east);
+  \draw[proof arrow] (a3.east) -- (w3.west);
+  \node[proof orange,text width=5.2cm,minimum height=.95cm,font=\sffamily\bfseries]
+    at (12.55,.75) {$r_0,r_1,r_2$ span a $3$-dimensional space, so $\dim W\ge3$ and therefore $|B_{\rm aux}|\ge3$.};
+  \draw[proof green arrow,line width=1pt] (7.35,2.7) -- (8.2,2.7);
+  \node[proof green,text width=6.5cm,minimum height=.7cm,font=\sffamily\bfseries]
+    at (4.2,.55) {7 target forms $+$ at least 3 auxiliary forms $=10$ additions};
+\end{tikzpicture}

@@ -1,0 +1,89 @@
+{
+  "pinned_cpp_sha256": "2174f445df534455c30e9ae7b54b8dfff4fdbdce3ff4eaf6b7d7e557fa3f8e4c",
+  "instrumented_cpp_sha256": "58b3608a407c14a9e13c3fb4fe4015b0ea5cb127d7fb9002dd9bac9596efeb25",
+  "original_prefixes_sha256": "6c5e2005dfb187758a306ae945fb0dfbae3138278a66026e665b586033889008",
+  "cases": {
+    "0": {
+      "sample_depths": {
+        "4": {
+          "history_popcount": 13,
+          "successors": 5,
+          "history_bits": 268
+        },
+        "8": {
+          "history_popcount": 17,
+          "successors": 3,
+          "history_bits": 339
+        },
+        "11": {
+          "history_popcount": 20,
+          "successors": 0,
+          "history_bits": 339
+        }
+      },
+      "log_sha256": "b405bc54702a8852bfcb70450773351635244e94b4612cef7d6c304361146e8b",
+      "best_terminal": {
+        "depth": 10,
+        "total": 19,
+        "history_popcount": 17,
+        "history_bits": 339,
+        "targets": [
+          3,
+          6,
+          27,
+          54
+        ],
+        "target_costs": [
+          2,
+          2,
+          2,
+          3
+        ],
+        "cap3_total": 19
+      }
+    },
+    "315": {
+      "sample_depths": {
+        "4": {
+          "history_popcount": 12,
+          "successors": 7,
+          "history_bits": 196
+        },
+        "8": {
+          "history_popcount": 16,
+          "successors": 0,
+          "history_bits": 215
+        },
+        "11": {
+          "history_popcount": 19,
+          "successors": 1,
+          "history_bits": 211
+        }
+      },
+      "log_sha256": "d523e065c68bb5ed190a4250e6584e883974fd6591f7462f987e0800f8780487",
+      "best_terminal": {
+        "depth": 6,
+        "total": 20,
+        "history_popcount": 13,
+        "history_bits": 202,
+        "targets": [
+          82,
+          3,
+          6,
+          27,
+          54
+        ],
+        "target_costs": [
+          3,
+          2,
+          2,
+          3,
+          4
+        ],
+        "cap3_total": 19
+      }
+    }
+  },
+  "scope": "local successor equality benchmark only; not sector coverage or prefix completeness",
+  "lean_probe_sha256": "638ab851dbc48407148e5490c3fef54f009a282e3c18fb7e50410ac34600d4f6"
+}

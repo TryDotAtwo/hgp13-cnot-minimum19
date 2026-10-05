@@ -1,0 +1,15 @@
+\begin{tikzpicture}[font=\sffamily]
+  \node[proof title] at (8,5.2) {One CNOT is one labelled row addition};
+  \node[proof box,text width=3.5cm,minimum height=1.55cm] (before) at (2.1,3.65)
+    {Before the gate\\control wire: $X_c$\\target wire: $X_d$};
+  \node[proof green,text width=3.4cm,minimum height=1.35cm,font=\sffamily\bfseries] (gate) at (8,3.65)
+    {gate $(c,d)$\\[2pt]$X_d\leftarrow X_d+X_c$};
+  \node[proof box,text width=3.5cm,minimum height=1.55cm] (after) at (13.9,3.65)
+    {After the gate\\control wire: $X_c$\\target wire: $X_d+X_c$};
+  \draw[proof arrow] (before) -- (gate);
+  \draw[proof arrow] (gate) -- (after);
+  \node[proof orange,text width=11.8cm,minimum height=1.05cm] at (8,1.7)
+    {Matrix description: replace row $d$ by row $d$ + row $c$ over $\F$.};
+  \node[proof note] at (8,.55)
+    {All other wires and all other matrix rows remain unchanged.};
+\end{tikzpicture}

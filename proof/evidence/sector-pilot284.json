@@ -1,0 +1,82 @@
+{
+  "status": "kernel_verified_finite_graph_only",
+  "theorem": "HGP13.SectorPilot284.no_terminal",
+  "runtime_image": "local/lean4:4.34.0",
+  "runtime_image_id": "sha256:13bff5fc905e24853aabe58f2cf2ec6966c1e44d2120bccf12a1ecd29e8b25b1",
+  "command": [
+    "lean",
+    "Pilot284.lean"
+  ],
+  "metrics": {
+    "exit_code": 0,
+    "elapsed_seconds": 212,
+    "sampled_peak_rss_kib": 1695108
+  },
+  "transitive_axioms": [
+    "propext",
+    "Quot.sound"
+  ],
+  "negative_test": "omitted nonempty successor list rejected as false",
+  "graph": {
+    "sector": 284,
+    "layers": [
+      1,
+      16,
+      117,
+      286,
+      495,
+      330,
+      79,
+      6
+    ],
+    "states": 1330,
+    "edges": 2604,
+    "prefixes": 524,
+    "source_bytes": 588871,
+    "full_word_correspondence_proved": false
+  },
+  "initial_rows": [
+    4,
+    8,
+    64,
+    128
+  ],
+  "fixed_controls": [
+    1,
+    2,
+    16,
+    32
+  ],
+  "target_rows": [
+    4,
+    8,
+    67,
+    224
+  ],
+  "initial_history": [
+    1,
+    2,
+    4,
+    8,
+    16,
+    32,
+    64,
+    128
+  ],
+  "max_depth": 13,
+  "catalogue_completeness_proved": false,
+  "full_word_correspondence_proved": false,
+  "source_sha256": {
+    "lean\\SectorPilot284.lean": "4f32e76615d21b727fed5c66eacc2fc7bb35b4f385511f6bfb93707904044931",
+    "hgp13_verify.cpp": "2174f445df534455c30e9ae7b54b8dfff4fdbdce3ff4eaf6b7d7e557fa3f8e4c",
+    "pilot284\\export.py": "825ce0adf65ef9baf259c6d7f80e8385060a8f8b89bebe2095048550052d04b2",
+    "pilot284\\exported.txt": "a491ada81932832b4abdb3340d36e43d46e46f3faae9be86913517f2370f9145",
+    "pilot284\\generate.py": "d6262a0f5cb1164ef19b4967d65f7a6eb481ffe0ab68e21856a395cc21d89424",
+    "pilot284\\generator_report.json": "f3aff049a06686efb8966ec806e4600707b59880dab93210c8bf424637ccd9fc",
+    "pilot284\\metrics.txt": "4da00792eefaa04eb617ff0ba1d17d3b28aaf7f87167c467a836361abdb349bc",
+    "pilot284\\negative.log": "462c39e69c780b81a8bd0025cdcc2edfc425f42901ff691b9785e1fbdaad4add",
+    "pilot284\\negative.py": "d5c41cd50446de82815be9967b773a55a5feba0d142ddc37a970da331caa18a5",
+    "pilot284\\pilot.log": "b7d61d289233e8302312b9bdd51bc1eac9faaa92c935c92b80ecb729891b9f21",
+    "pilot284\\README.md": "a6f713fedb76db63f657a259c733c4ed206bbfda16455b09548ebd3778f64524"
+  }
+}

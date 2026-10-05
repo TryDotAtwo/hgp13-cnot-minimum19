@@ -1,0 +1,32 @@
+{
+  "scope": "SharedSearch graph only; full-word/pruning and catalogue completeness remain open",
+  "sector": 359,
+  "graph": {
+    "states": 2208,
+    "edges": 3179,
+    "prefixes": {
+      "3": 524,
+      "4": 40208
+    },
+    "terminals": 36,
+    "full_word_correspondence_proved": false
+  },
+  "depth_bound": 12,
+  "terminal_histories": 36,
+  "graph_theorem": "HGP13.SectorGraph359.reachable_terminal_key",
+  "cost_theorem": "HGP13.SectorCost359.no_cheap_terminal",
+  "negative_check": {
+    "exit_code": 1,
+    "mutation": "Replace all successors of state s7_74 with the empty list",
+    "rejected_as_false": true
+  },
+  "hashes": {
+    "lean\\SectorGraph359.lean": "52b083d73e7f33e6cb931b2cdf5f6e8f142147ae92e9150762787d6586a344ae",
+    "lean\\SectorCost359.lean": "e79eca82f79f644d6f1149dee2ae79bd0ff3d21dfdd39eab86815e9b6174d836",
+    "pilot359\\graph359.txt": "6cdfce0640f2385379c274a17d0ac1e43022168b05d6e02cdc983fde185af0fd",
+    "pilot359\\generate_graph359.py": "9a46ebad0e8656dd620c2051266968f7c5e72307c8284772e8eb4dfedcdd83c3",
+    "pilot359\\generate_cost_bridge359.py": "fd9c2b860d9f4803121acdd6c4c17c78c7b2dc791afd8b207d7d25889d6c6563",
+    "pilot359\\export_graph.py": "6d07f1a307c861aedc88fafd58df436c6c3ebaca6ffbe44acb819ccef7974d3d",
+    "evidence\\sector-graph359-negative.log": "aeaa838771fa83a818df8c6a52add302f0f3f87eeba41a9e6cf08a5768d7339a"
+  }
+}

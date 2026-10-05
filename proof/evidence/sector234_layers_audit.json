@@ -1,0 +1,25 @@
+{
+  "status": "PASS: all sector-234 state layers equal as sets",
+  "pinned_source_sha256": "2174f445df534455c30e9ae7b54b8dfff4fdbdce3ff4eaf6b7d7e557fa3f8e4c",
+  "diagnostic_sha256": "b15f95ed452ee7d7aeb86d2b22885fa157467b91bcc0907d848301af5ae767ee",
+  "candidate_sha256": "f3f57dfed66056595313710621614f3d5a24dac7889b6194fa476deb622874b1",
+  "layers": [
+    1,
+    19,
+    163,
+    557,
+    1250,
+    1602,
+    1445,
+    938,
+    462,
+    180,
+    46,
+    5,
+    0
+  ],
+  "states": 6668,
+  "terminals": 16,
+  "best": 21,
+  "scope": "one sector; two C++ exports; candidate graph separately checked by Lean"
+}
